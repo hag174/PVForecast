@@ -60,3 +60,7 @@ tags:
 ## Setup command reference
 - Updated `requirements.txt` into a documented setup-command reference for this repository.
 - Added explicit `npm install` commands for the project dependencies, the Mocha/Chai/Sinon test stack, and the TypeScript toolchain alongside the existing Basic Memory and ioBroker bootstrap commands.
+
+## Git hygiene
+- Tightened `.gitignore` to explicitly exclude `node_modules/`, `build/`, `dist/`, `.nyc_output/`, coverage output, and common npm/yarn log files.
+- This prevents future accidental additions, but already tracked files still need to be removed from the Git index separately.
