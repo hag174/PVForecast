@@ -1,0 +1,142 @@
+{
+    "i18n": false,
+    "type": "panel",
+    "items": {
+        "locationMode": {
+            "type": "select",
+            "label": "Location mode",
+            "newLine": true,
+            "options": [
+                {
+                    "label": "Geocode city",
+                    "value": "geocode"
+                },
+                {
+                    "label": "Manual coordinates",
+                    "value": "manual"
+                }
+            ],
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 4
+        },
+        "city": {
+            "type": "text",
+            "label": "City",
+            "help": "Used in geocode mode and as a display label in manual mode.",
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 4
+        },
+        "countryCode": {
+            "type": "text",
+            "label": "Country code",
+            "help": "Optional ISO country code such as DE or AT to disambiguate geocoding results.",
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 4
+        },
+        "latitude": {
+            "type": "number",
+            "label": "Latitude",
+            "help": "Only required in manual coordinate mode.",
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 4
+        },
+        "longitude": {
+            "type": "number",
+            "label": "Longitude",
+            "help": "Only required in manual coordinate mode.",
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 4
+        },
+        "timezoneMode": {
+            "type": "select",
+            "label": "Timezone mode",
+            "newLine": true,
+            "options": [
+                {
+                    "label": "Automatic",
+                    "value": "auto"
+                },
+                {
+                    "label": "Manual override",
+                    "value": "manual"
+                }
+            ],
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 4
+        },
+        "timezone": {
+            "type": "text",
+            "label": "Timezone",
+            "help": "Used only when timezone mode is set to manual override.",
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 4
+        },
+        "tiltDeg": {
+            "type": "number",
+            "label": "Tilt in degrees",
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 4
+        },
+        "azimuthDeg": {
+            "type": "number",
+            "label": "Azimuth in degrees",
+            "help": "0 points south. Negative values rotate east, positive values rotate west.",
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 4
+        },
+        "arrayAreaM2": {
+            "type": "number",
+            "label": "Array area in m²",
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 4
+        },
+        "panelEfficiencyPct": {
+            "type": "number",
+            "label": "Panel efficiency in percent",
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 4
+        }
+    }
+}

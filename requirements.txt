@@ -1,0 +1,18 @@
+# Project setup commands
+
+# Basic Memory MCP
+codex mcp add basic-memory bash -c "uvx basic-memory mcp"
+codex mcp add basic-memory bash -c "uvx basic-memory mcp --project PVForecast"
+
+# ioBroker adapter scaffold
+npx @iobroker/create-adapter@latest
+npm install --global @iobroker/dev-server
+
+# Install all project dependencies from package.json
+npm install
+
+# Install or refresh the test stack explicitly
+npm install --save-dev mocha chai sinon @types/mocha @types/chai @types/sinon chai-as-promised sinon-chai nyc ts-node source-map-support
+
+# Install or refresh the TypeScript toolchain explicitly
+npm install --save-dev typescript @types/node @tsconfig/node20

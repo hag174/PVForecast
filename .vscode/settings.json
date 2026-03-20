@@ -1,0 +1,41 @@
+{
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "eslint.enable": true,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "mochaExplorer.configFile": "test/mocharc.custom.json",
+    "mochaExplorer.files": ["Tests/**/*.test.ts", "test/package.js", "test/integration.js"],
+    "mochaExplorer.watch": {
+        "files": ["src/**/*.ts", "Tests/**/*.test.ts", "test/**/*.js"],
+        "ignore": ["**/node_modules/**", "build/**"]
+    },
+    "mochaExplorer.cwd": "${workspaceFolder}",
+    "mochaExplorer.nodePath": "/bin/node",
+    "mochaExplorer.mochaPath": "node_modules/mocha",
+    "mochaExplorer.debuggerConfig": "Debug Mocha Tests",
+    "mochaExplorer.autoload": false,
+    "testExplorer.codeLens": true,
+    "testExplorer.gutterDecoration": true,
+    "[typescript]": {
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+        }
+    },
+    "json.schemas": [
+        {
+            "fileMatch": ["io-package.json"],
+            "url": "https://raw.githubusercontent.com/ioBroker/ioBroker.js-controller/master/schemas/io-package.json"
+        },
+        {
+            "fileMatch": [
+                "admin/jsonConfig.json",
+                "admin/jsonConfig.json5",
+                "admin/jsonCustom.json",
+                "admin/jsonCustom.json5",
+                "admin/jsonTab.json",
+                "admin/jsonTab.json5"
+            ],
+            "url": "https://raw.githubusercontent.com/ioBroker/ioBroker.admin/master/packages/jsonConfig/schemas/jsonConfig.json"
+        }
+    ]
+}
