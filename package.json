@@ -7,7 +7,7 @@
     "email": "no-reply@example.com"
   },
   "contributors": [],
-  "homepage": "https://github.com/Hagen/ioBroker.pvforecast",
+  "homepage": "https://github.com/hag174/PVForecast",
   "license": "MIT",
   "keywords": [
     "solar",
@@ -17,7 +17,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Hagen/ioBroker.pvforecast.git"
+    "url": "https://github.com/hag174/PVForecast.git"
   },
   "engines": {
     "node": ">= 20"
@@ -99,7 +99,7 @@
     "instrument": true
   },
   "bugs": {
-    "url": "https://github.com/Hagen/ioBroker.pvforecast/issues"
+    "url": "https://github.com/hag174/PVForecast/issues"
   },
   "readmeFilename": "README.md"
 }

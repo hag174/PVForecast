@@ -49,3 +49,14 @@ tags:
 - The workspace recommendations were updated to stop recommending that extension and to mark it as an unwanted recommendation for this repository.
 - The reliable VS Code workflow for this project is now `Tasks: Run Task` for running tests and `Run and Debug` with the checked-in launch configurations for debugging Mocha tests.
 - `mochaExplorer.autoload` remains disabled so the broken extension does not spam automatic discovery attempts if it is still installed locally.
+
+## Repository metadata alignment
+- Updated repository links in `io-package.json` and `package.json` from the scaffold placeholder `Hagen/ioBroker.pvforecast` to the actual GitHub repository `hag174/PVForecast`.
+- Corrected the external icon URL, README URL, homepage URL, repository URL, and issues URL.
+
+## Visual identity
+- Replaced `admin/pvforecast.png` with a newly generated 320x320 PNG icon showing a stylized sun, sky and solar panels for a clearer PV-focused adapter identity.
+
+## Setup command reference
+- Updated `requirements.txt` into a documented setup-command reference for this repository.
+- Added explicit `npm install` commands for the project dependencies, the Mocha/Chai/Sinon test stack, and the TypeScript toolchain alongside the existing Basic Memory and ioBroker bootstrap commands.
