@@ -43,7 +43,7 @@
             "uk": "Адаптер сонячного прогнозу для ioBroker з використанням Open-Meteo",
             "zh-cn": "使用 Open-Meteo 的 ioBroker 太阳能预测适配器"
         },
-        "authors": ["Hagen <no-reply@example.com>"],
+        "authors": ["Hagen Schweitzer <hagenschweitze@gmx.de>"],
         "keywords": ["solar", "forecast", "pv", "open-meteo"],
         "licenseInformation": {
             "type": "free",

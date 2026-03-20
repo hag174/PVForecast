@@ -43,3 +43,9 @@ tags:
 ## VS Code Mocha Test Explorer workaround
 - When test discovery failed with `spawn /usr/bin/node ENOENT`, the workspace setting `mochaExplorer.nodePath` was set to `null` so the extension uses the Node runtime bundled with VS Code instead of an externally detected binary.
 - The fallback to the VS Code bundled runtime was not sufficient for one local setup, so the workspace was tightened further to `mochaExplorer.nodePath = "/bin/node"` and `mochaExplorer.mochaPath = "node_modules/mocha"`.
+
+## VS Code test workflow update
+- The legacy `hbenl.vscode-mocha-test-adapter` continues to fail in one local VS Code setup with `spawn ... ENOENT` while loading Mocha options, even though the project tests themselves run successfully from the shell.
+- The workspace recommendations were updated to stop recommending that extension and to mark it as an unwanted recommendation for this repository.
+- The reliable VS Code workflow for this project is now `Tasks: Run Task` for running tests and `Run and Debug` with the checked-in launch configurations for debugging Mocha tests.
+- `mochaExplorer.autoload` remains disabled so the broken extension does not spam automatic discovery attempts if it is still installed locally.

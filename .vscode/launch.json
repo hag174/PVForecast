@@ -4,14 +4,49 @@
         {
             "name": "Debug Mocha Tests",
             "type": "pwa-node",
-            "request": "attach",
-            "port": 9229,
-            "continueOnAttach": true,
-            "autoAttachChildProcesses": false,
-            "resolveSourceMapLocations": [
-                "!**/node_modules/**",
-                "!**/.vscode/extensions/hbenl.vscode-mocha-test-adapter-*/**"
+            "request": "launch",
+            "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+            "args": [
+                "--config",
+                "${workspaceFolder}/test/mocharc.custom.json",
+                "Tests/**/*.test.ts"
             ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "autoAttachChildProcesses": false,
+            "skipFiles": [
+                "<node_internals>/**"
+            ]
+        },
+        {
+            "name": "Debug Package Tests",
+            "type": "pwa-node",
+            "request": "launch",
+            "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+            "args": [
+                "test/package.js",
+                "--exit"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "skipFiles": [
+                "<node_internals>/**"
+            ]
+        },
+        {
+            "name": "Debug Integration Tests",
+            "type": "pwa-node",
+            "request": "launch",
+            "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+            "args": [
+                "test/integration.js",
+                "--exit"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
             "skipFiles": [
                 "<node_internals>/**"
             ]

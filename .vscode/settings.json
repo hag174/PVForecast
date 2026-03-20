@@ -13,7 +13,7 @@
     "mochaExplorer.nodePath": "/bin/node",
     "mochaExplorer.mochaPath": "node_modules/mocha",
     "mochaExplorer.debuggerConfig": "Debug Mocha Tests",
-    "mochaExplorer.autoload": true,
+    "mochaExplorer.autoload": false,
     "testExplorer.codeLens": true,
     "testExplorer.gutterDecoration": true,
     "[typescript]": {
