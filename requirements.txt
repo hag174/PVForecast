@@ -1,3 +1,5 @@
+codex mcp add basic-memory bash -c "uvx basic-memory mcp"
+codex mcp add basic-memory bash -c "uvx basic-memory mcp --project your-project-name"
 npx @iobroker/create-adapter@latest
 npm install --global @iobroker/dev-server
 

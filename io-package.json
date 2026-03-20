@@ -1,0 +1,141 @@
+{
+    "common": {
+        "name": "pvforecast",
+        "version": "0.0.1",
+        "news": {
+            "0.0.1": {
+                "en": "initial release",
+                "de": "Erstveröffentlichung",
+                "ru": "Начальная версия",
+                "pt": "lançamento inicial",
+                "nl": "Eerste uitgave",
+                "fr": "Première version",
+                "it": "Versione iniziale",
+                "es": "Versión inicial",
+                "pl": "Pierwsze wydanie",
+                "uk": "Початкова версія",
+                "zh-cn": "首次出版"
+            }
+        },
+        "titleLang": {
+            "en": "PV Forecast",
+            "de": "PV-Prognose",
+            "ru": "Прогноз солнечной энергии",
+            "pt": "Previsão fotovoltaica",
+            "nl": "PV-voorspelling",
+            "fr": "Prévisions photovoltaïques",
+            "it": "Previsioni FV",
+            "es": "Previsión fotovoltaica",
+            "pl": "Prognoza fotowoltaiczna",
+            "uk": "PV прогноз",
+            "zh-cn": "光伏预测"
+        },
+        "desc": {
+            "en": "Solar forecast adapter for ioBroker using Open-Meteo",
+            "de": "Solarprognoseadapter für ioBroker mit Open-Meteo",
+            "ru": "Адаптер солнечного прогноза для ioBroker с использованием Open-Meteo",
+            "pt": "Adaptador de previsão solar para ioBroker usando Open-Meteo",
+            "nl": "Zonnevoorspellingsadapter voor ioBroker met behulp van Open-Meteo",
+            "fr": "Adaptateur de prévision solaire pour ioBroker utilisant Open-Meteo",
+            "it": "Adattatore per previsioni solari per ioBroker utilizzando Open-Meteo",
+            "es": "Adaptador de previsión solar para ioBroker mediante Open-Meteo",
+            "pl": "Adapter prognozy słonecznej dla ioBroker korzystający z Open-Meteo",
+            "uk": "Адаптер сонячного прогнозу для ioBroker з використанням Open-Meteo",
+            "zh-cn": "使用 Open-Meteo 的 ioBroker 太阳能预测适配器"
+        },
+        "authors": ["Hagen <no-reply@example.com>"],
+        "keywords": ["solar", "forecast", "pv", "open-meteo"],
+        "licenseInformation": {
+            "type": "free",
+            "license": "MIT"
+        },
+        "platform": "Javascript/Node.js",
+        "icon": "pvforecast.png",
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/Hagen/ioBroker.pvforecast/main/admin/pvforecast.png",
+        "readme": "https://github.com/Hagen/ioBroker.pvforecast/blob/main/README.md",
+        "loglevel": "info",
+        "tier": 3,
+        "mode": "daemon",
+        "type": "misc-data",
+        "compact": true,
+        "connectionType": "cloud",
+        "dataSource": "poll",
+        "adminUI": {
+            "config": "json"
+        },
+        "dependencies": [
+            {
+                "js-controller": ">=6.0.11"
+            }
+        ],
+        "globalDependencies": [
+            {
+                "admin": ">=7.0.23"
+            }
+        ]
+    },
+    "native": {
+        "locationMode": "geocode",
+        "city": "Berlin",
+        "countryCode": "",
+        "latitude": 52.52,
+        "longitude": 13.405,
+        "timezoneMode": "auto",
+        "timezone": "Europe/Berlin",
+        "tiltDeg": 0,
+        "azimuthDeg": 0,
+        "arrayAreaM2": 10,
+        "panelEfficiencyPct": 22
+    },
+    "objects": [],
+    "instanceObjects": [
+        {
+            "_id": "info",
+            "type": "channel",
+            "common": {
+                "name": "Information"
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.connection",
+            "type": "state",
+            "common": {
+                "role": "indicator.connected",
+                "name": "Device or service connected",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.lastUpdate",
+            "type": "state",
+            "common": {
+                "role": "value.time",
+                "name": "Last successful update",
+                "type": "string",
+                "read": true,
+                "write": false,
+                "def": ""
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.lastError",
+            "type": "state",
+            "common": {
+                "role": "text",
+                "name": "Last error message",
+                "type": "string",
+                "read": true,
+                "write": false,
+                "def": ""
+            },
+            "native": {}
+        }
+    ]
+}

@@ -1,0 +1,45 @@
+---
+title: 2026_03_20_initial_implementation
+type: note
+permalink: pvforecast/history/2026-03-20-initial-implementation
+tags:
+- history
+- implementation
+- verification
+---
+
+# Initial Implementation
+
+## Completed work
+- Generated the repository from the official ioBroker TypeScript adapter scaffold.
+- Implemented JSON Config based adapter settings for geocoding/manual coordinates, timezone handling, tilt, azimuth, array area, and panel efficiency.
+- Implemented Open-Meteo geocoding and forecast clients.
+- Implemented PV forecast transformation with hourly kWh calculation, daily totals for day0..day6, and calendar week/month summaries with completeness flags.
+- Implemented ioBroker state writing for `info`, `location`, `summary`, `forecast.daily`, `forecast.hourly.timestamps`, and JSON mirror states.
+- Updated project tests to use Mocha, Chai, and Sinon in the `Tests/` directory.
+- Updated `README.md`, `AGENTS.MD`, and VS Code extension recommendations.
+
+## Verification
+- `npm run check` passed.
+- `npm run lint` passed.
+- `npm test` passed.
+- `npm run build` passed.
+
+## Notable implementation choices
+- Hourly states are keyed by sanitized local timestamps so DST days can be represented without fixed 24-slot assumptions.
+- The adapter keeps the last successful forecast values when refreshing fails and only updates connection and error states.
+- Calendar week and month totals expose explicit completeness flags instead of estimating missing ranges.
+
+## Follow-up ideas
+- Improve the JSON Config UI with dynamic field visibility for geocode/manual and auto/manual timezone modes.
+- Add integration tests that validate the created ioBroker state tree more directly.
+- Fill or regenerate admin translations if multi-language labels become important in v1.
+
+## VS Code test workflow
+- Added the `hbenl.vscode-mocha-test-adapter` recommendation for running Mocha tests in the VS Code Testing view.
+- Added workspace settings for `mochaExplorer` so VS Code discovers `Tests/**/*.test.ts`, `test/package.js`, and `test/integration.js`.
+- Added a `Debug Mocha Tests` launch configuration for debugging tests from VS Code.
+
+## VS Code Mocha Test Explorer workaround
+- When test discovery failed with `spawn /usr/bin/node ENOENT`, the workspace setting `mochaExplorer.nodePath` was set to `null` so the extension uses the Node runtime bundled with VS Code instead of an externally detected binary.
+- The fallback to the VS Code bundled runtime was not sufficient for one local setup, so the workspace was tightened further to `mochaExplorer.nodePath = "/bin/node"` and `mochaExplorer.mochaPath = "node_modules/mocha"`.
