@@ -1,11 +1,36 @@
 # PV Forecast Adapter
 
 ## Purpose 
-This project implements a solar forecast Adapter for iobroker. It is using the free https://api.open-meteo.com/v1/forecast? webservice. Please see the code example in Solarvorhersage.ipynb.
+This project implements a solar forecast Adapter for iobroker. It is using the free https://api.open-meteo.com/v1/forecast? webservice. Please see the code example in Solarvorhersage.ipynb. 
+
+## Adapter Settings
+- the adapter should allow to set the following parameters by IOBroker users:
+  - Seletion of City (automatic calculation of latitude and longitude) - Default is Berlin
+  - Timezone (Default ist Berlin)
+  - Solar array tilt - Default 0°
+  - solar array azimuth - default 0°
+  - Solar array: array size in m² - Default ist 10
+  - Solar panels efficiency - Default ist 22%
+
+## Data to retrieve by adapter
+- Retrieval of `global_tilted_irradiance` from https://api.open-meteo.com/v1/forecast? with hourly resolution for the current month
+- Retrieval of hourly `cloudcover` for today and the next day
+- Calculation of solar power per hour from radiation, solar array size and efficiency
+- Calculation of solar power today
+- Calculation of solar power for the next 7 days
+- Calculation of the solar power for the current week
+- Calculation of the solar power for the current month
+
+## Parameters returned to adapter users
+- Hourly solar power today and tomorrow
+- Hourly cloud cover today and tomorrow
+- Total solar power today and for the following 6 days
+- Total solar power for the current week
+- Total solar power for the current month
 
 ## Documentation and support
 - Use the Use $iobroker-rag skill to query the local RAG server to get further information, documentation and templates concerning iobroker adapter projects.
-- add docstring comments to all codes. Comments must be in english.
+- Add comments to all codes. Comments must be in english.
 
 ## Core Implementation Rules
 
@@ -31,3 +56,4 @@ This project implements a solar forecast Adapter for iobroker. It is using the f
 
 ## 1) Testing
 - Write pytest for all code.
+- Test have to be located in the `Tests`folder.

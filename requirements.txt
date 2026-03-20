@@ -1,0 +1,3 @@
+npx @iobroker/create-adapter@latest
+npm install --global @iobroker/dev-server
+

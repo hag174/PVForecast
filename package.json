@@ -1,0 +1,17 @@
+{
+  "name": "pvforecast",
+  "version": "1.0.0",
+  "description": "Solar forcast adapter for IOBroker",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^6.2.2",
+    "mocha": "^11.7.5",
+    "sinon": "^21.0.3"
+  }
+}
