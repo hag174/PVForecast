@@ -64,3 +64,11 @@ tags:
 ## Git hygiene
 - Tightened `.gitignore` to explicitly exclude `node_modules/`, `build/`, `dist/`, `.nyc_output/`, coverage output, and common npm/yarn log files.
 - This prevents future accidental additions, but already tracked files still need to be removed from the Git index separately.
+
+## Quality review 2026-03-21
+- Re-verified the repository in a clean dependency state with `npm ci`, then ran `npm run check`, `npm run lint`, `npm test`, `npm run build`, `npm run coverage`, and `npm run test:integration`.
+- `npm run check`, `npm run lint`, `npm test`, and `npm run build` passed.
+- `npm run coverage` completed but reported `0/0`, so the current coverage configuration does not provide a meaningful measurement for the TypeScript sources.
+- `npm run test:integration` could not complete in the current local environment because a JS-Controller instance was already running.
+- The highest remaining quality risk is missing automated coverage for `src/main.ts`, especially timer handling, ioBroker state writes, stale hourly state cleanup, and error-state updates.
+- Follow-up: add adapter runtime tests that exercise the real `Pvforecast` class and verify the created state tree, not only the isolated service/helper modules.
