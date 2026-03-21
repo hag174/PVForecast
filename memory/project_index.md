@@ -20,4 +20,4 @@ This project implements a solar forecast adapter for ioBroker using the Open-Met
 - Project storage path points to `/home/hagen/Programming/PVForecast/memory`.
 - Codex MCP is configured to launch Basic Memory with `--project PVForecast`.
 - The repository now contains the initial TypeScript ioBroker adapter scaffold and first functional PV forecast implementation.
-- Current verification status: `npm run check`, `npm run lint`, `npm test`, and `npm run build` are passing.
+- Current verification status: `npm run check`, `npm run lint`, `npm test`, `npm run coverage`, `npm run build`, and `npm run test:integration` are passing when the host JS-Controller is stopped before the integration run.

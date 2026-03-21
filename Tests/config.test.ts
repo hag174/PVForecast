@@ -29,7 +29,6 @@ describe('resolveEffectiveConfig', () => {
         expect(config.azimuthDeg).to.equal(0);
         expect(config.arrayAreaM2).to.equal(10);
         expect(config.panelEfficiencyPct).to.equal(22);
-        expect(config.refreshIntervalMinutes).to.equal(60);
     });
 
     it('validates the manual coordinate mode', () => {

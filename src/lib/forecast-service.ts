@@ -27,10 +27,11 @@ export class ForecastService {
      * Resolves the configured location and calculates all public adapter outputs.
      *
      * @param config - Validated adapter configuration.
+     * @param signal - Abort signal used for Open-Meteo HTTP requests.
      * @returns The full forecast snapshot for ioBroker state writes.
      */
-    public async fetchSnapshot(config: EffectiveConfig): Promise<ForecastSnapshot> {
-        const resolvedLocation = await this.resolveLocation(config);
+    public async fetchSnapshot(config: EffectiveConfig, signal?: AbortSignal): Promise<ForecastSnapshot> {
+        const resolvedLocation = await this.resolveLocation(config, signal);
         const requestedTimeZone = config.timezoneMode === 'manual' ? config.timeZone : resolvedLocation.timeZone;
         const response = await this.client.fetchForecast({
             latitude: resolvedLocation.latitude,
@@ -38,6 +39,7 @@ export class ForecastService {
             timeZone: requestedTimeZone,
             tiltDeg: config.tiltDeg,
             azimuthDeg: config.azimuthDeg,
+            signal,
         });
 
         const effectiveTimeZone =
@@ -78,7 +80,7 @@ export class ForecastService {
         };
     }
 
-    private async resolveLocation(config: EffectiveConfig): Promise<LocationContext> {
+    private async resolveLocation(config: EffectiveConfig, signal?: AbortSignal): Promise<LocationContext> {
         if (config.locationMode === 'manual') {
             return {
                 resolvedName:
@@ -94,6 +96,7 @@ export class ForecastService {
         const geocodingResult: GeocodingResult = await this.client.geocode(
             config.city,
             config.countryCode || undefined,
+            signal,
         );
         return {
             resolvedName: geocodingResult.resolvedName,

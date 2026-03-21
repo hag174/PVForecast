@@ -30,6 +30,7 @@ The adapter uses a JSON Config based admin UI with these fields:
 - `panelEfficiencyPct`: panel efficiency in percent, default `22`
 
 The adapter refreshes the forecast on startup and then hourly.
+Each Open-Meteo refresh uses a 30 second request timeout and skips overlapping scheduled runs while a previous refresh is still active.
 
 ## Exposed states
 
@@ -48,10 +49,12 @@ The adapter refreshes the forecast on startup and then hourly.
 - `summary.currentMonth.complete`
 - `forecast.daily.day0..day6.date`
 - `forecast.daily.day0..day6.energy_kwh`
-- `forecast.hourly.timestamps.<localTimestamp>.*`
+- `forecast.hourly.timestamps.<key>.*`
 - `forecast.json.hourly`
 - `forecast.json.daily`
 - `forecast.json.summary`
+
+The hourly `<key>` is derived from the local timestamp and gains a deterministic suffix when the same local hour occurs twice during the DST fallback change.
 
 ## Development
 
@@ -63,6 +66,7 @@ Important scripts:
 | `npm run check` | Run TypeScript type checking without emitting files |
 | `npm run lint` | Run ESLint |
 | `npm test` | Run project tests and package validation |
+| `npm run coverage` | Run TypeScript coverage for `src/**/*.ts` with `c8` |
 | `npm run test:integration` | Run the generated ioBroker integration tests |
 | `npm run dev-server` | Start the local ioBroker dev server |
 

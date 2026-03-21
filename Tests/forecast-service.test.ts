@@ -43,7 +43,6 @@ describe('ForecastService', () => {
         azimuthDeg: 0,
         arrayAreaM2: 10,
         panelEfficiencyPct: 22,
-        refreshIntervalMinutes: 60,
     };
 
     let clock: sinon.SinonFakeTimers;
@@ -130,5 +129,27 @@ describe('ForecastService', () => {
 
         expect(geocodeStub.called).to.equal(false);
         expect(forecastStub.calledOnce).to.equal(true);
+    });
+
+    it('forwards abort signals to geocoding and forecast requests', async () => {
+        const signal = new AbortController().signal;
+        const geocodeStub = sinon.stub().resolves({
+            resolvedName: 'Berlin, Germany',
+            countryCode: 'DE',
+            latitude: 52.52,
+            longitude: 13.405,
+            timeZone: 'Europe/Berlin',
+        });
+        const forecastStub = sinon.stub().resolves(createHourlyResponse('2026-03-01', '2026-03-31'));
+
+        const service = new ForecastService({
+            geocode: geocodeStub,
+            fetchForecast: forecastStub,
+        });
+
+        await service.fetchSnapshot(baseConfig, signal);
+
+        expect(geocodeStub.firstCall.args[2]).to.equal(signal);
+        expect(forecastStub.firstCall.args[0].signal).to.equal(signal);
     });
 });

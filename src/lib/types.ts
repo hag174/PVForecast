@@ -15,7 +15,6 @@ export interface EffectiveConfig {
     azimuthDeg: number;
     arrayAreaM2: number;
     panelEfficiencyPct: number;
-    refreshIntervalMinutes: number;
 }
 
 export interface GeocodingResult {
