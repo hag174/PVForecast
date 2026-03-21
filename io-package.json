@@ -20,15 +20,15 @@
         "titleLang": {
             "en": "SolarForecast",
             "de": "SolarForecast",
-            "ru": "Прогноз солнечной энергии",
-            "pt": "Previsão fotovoltaica",
-            "nl": "PV-voorspelling",
-            "fr": "Prévisions photovoltaïques",
-            "it": "Previsioni FV",
-            "es": "Previsión fotovoltaica",
-            "pl": "Prognoza fotowoltaiczna",
-            "uk": "PV прогноз",
-            "zh-cn": "光伏预测"
+            "ru": "SolarForecast",
+            "pt": "SolarForecast",
+            "nl": "SolarForecast",
+            "fr": "SolarForecast",
+            "it": "SolarForecast",
+            "es": "SolarForecast",
+            "pl": "SolarForecast",
+            "uk": "SolarForecast",
+            "zh-cn": "SolarForecast"
         },
         "desc": {
             "en": "Solar forecast adapter for ioBroker using Open-Meteo",
