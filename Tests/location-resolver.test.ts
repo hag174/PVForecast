@@ -56,8 +56,31 @@ describe('LocationResolver', () => {
 
         expect(geocodeStub.calledOnceWithExactly('Berlin', undefined, undefined)).to.equal(true);
         expect(result.native).to.not.have.property('timezone');
-        expect(result.native[LOCATION_VALIDATED_KEY_FIELD]).to.equal('Berlin|');
+        expect(result.native.countryCode).to.equal('DE');
+        expect(result.native[LOCATION_VALIDATED_KEY_FIELD]).to.equal('Berlin|DE');
         expect(result.native[LOCATION_VALIDATION_MESSAGE_FIELD]).to.contain('Europe/Paris');
+    });
+
+    it('stores the validation key for the applied country code after a successful lookup', async () => {
+        const geocodeStub = sinon.stub().resolves({
+            resolvedName: 'Schleiz, Germany',
+            countryCode: 'DE',
+            latitude: 50.5788,
+            longitude: 11.8114,
+            timeZone: 'Europe/Berlin',
+        });
+        const resolver = new LocationResolver({ geocode: geocodeStub });
+
+        const result = await resolver.validateGeocodeLocation({
+            city: 'Schleiz',
+            countryCode: '',
+            timezoneMode: 'auto',
+            timezone: '',
+        });
+
+        expect(result.native.countryCode).to.equal('DE');
+        expect(result.native[LOCATION_VALIDATED_KEY_FIELD]).to.equal('Schleiz|DE');
+        expect(result.native[LOCATION_VALIDATION_STATE_FIELD]).to.equal('success');
     });
 
     it('returns an error response when the city lookup fails', async () => {
