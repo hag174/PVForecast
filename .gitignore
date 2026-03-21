@@ -5,7 +5,14 @@
 
 *.code-workspace
 node_modules/
-build/
+# Keep generated adapter runtime files in git, but ignore any other build byproducts.
+build/*
+!build/lib/
+!build/main.js
+!build/main.js.map
+build/lib/*
+!build/lib/*.js
+!build/lib/*.js.map
 dist/
 .nyc_output/
 npm-debug.log*
