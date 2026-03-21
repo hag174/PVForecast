@@ -1,11 +1,11 @@
 import { addDays, boundaryTimestamp, formatLocalDate, getIsoWeekRange, getMonthRange, roundNumber } from './dates';
+import { LocationResolver } from './location-resolver';
 import { OpenMeteoClient } from './open-meteo-client';
 import type {
     DailyForecast,
     EffectiveConfig,
     ForecastRow,
     ForecastSnapshot,
-    GeocodingResult,
     LocationContext,
     OpenMeteoForecastResponse,
 } from './types';
@@ -14,6 +14,8 @@ import type {
  * Builds PV forecast snapshots from Open-Meteo geocoding and hourly forecast data.
  */
 export class ForecastService {
+    private readonly locationResolver: Pick<LocationResolver, 'resolveLocation'>;
+
     /**
      * Creates a forecast service that can be stubbed in tests.
      *
@@ -21,7 +23,9 @@ export class ForecastService {
      */
     public constructor(
         private readonly client: Pick<OpenMeteoClient, 'geocode' | 'fetchForecast'> = new OpenMeteoClient(),
-    ) {}
+    ) {
+        this.locationResolver = new LocationResolver(client);
+    }
 
     /**
      * Resolves the configured location and calculates all public adapter outputs.
@@ -31,7 +35,7 @@ export class ForecastService {
      * @returns The full forecast snapshot for ioBroker state writes.
      */
     public async fetchSnapshot(config: EffectiveConfig, signal?: AbortSignal): Promise<ForecastSnapshot> {
-        const resolvedLocation = await this.resolveLocation(config, signal);
+        const resolvedLocation = await this.locationResolver.resolveLocation(config, signal);
         const requestedTimeZone = config.timezoneMode === 'manual' ? config.timeZone : resolvedLocation.timeZone;
         const response = await this.client.fetchForecast({
             latitude: resolvedLocation.latitude,
@@ -77,33 +81,6 @@ export class ForecastService {
                 energyKwh: this.sumEnergyForRange(allRows, monthRange.startDate, monthRange.endDate),
                 complete: this.isRangeComplete(allRows, monthRange.startDate, monthRange.endDate),
             },
-        };
-    }
-
-    private async resolveLocation(config: EffectiveConfig, signal?: AbortSignal): Promise<LocationContext> {
-        if (config.locationMode === 'manual') {
-            return {
-                resolvedName:
-                    config.city ||
-                    `${config.latitude?.toFixed(4) ?? '0.0000'}, ${config.longitude?.toFixed(4) ?? '0.0000'}`,
-                countryCode: config.countryCode,
-                latitude: config.latitude ?? 0,
-                longitude: config.longitude ?? 0,
-                timeZone: config.timezoneMode === 'manual' ? config.timeZone : 'auto',
-            };
-        }
-
-        const geocodingResult: GeocodingResult = await this.client.geocode(
-            config.city,
-            config.countryCode || undefined,
-            signal,
-        );
-        return {
-            resolvedName: geocodingResult.resolvedName,
-            countryCode: geocodingResult.countryCode,
-            latitude: geocodingResult.latitude,
-            longitude: geocodingResult.longitude,
-            timeZone: config.timezoneMode === 'manual' ? config.timeZone : geocodingResult.timeZone,
         };
     }
 

@@ -74,7 +74,7 @@ function createSnapshot(hourly?: ForecastRow[]): ForecastSnapshot {
 
 class TestHost implements AdapterRuntimeHost {
     public config: ioBroker.AdapterConfig;
-    public readonly namespace = 'pvforecast.0';
+    public readonly namespace = 'solarforecast.0';
     public readonly log = {
         error: sinon.spy(),
         warn: sinon.spy(),

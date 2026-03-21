@@ -27,7 +27,7 @@ interface OpenMeteoTestFixtures {
     forecast?: OpenMeteoForecastResponse;
 }
 
-const TEST_FIXTURES_ENV = 'PVFORECAST_TEST_FIXTURES';
+const TEST_FIXTURES_ENV = 'SOLARFORECAST_TEST_FIXTURES';
 const fixtureCache = new Map<string, OpenMeteoTestFixtures>();
 
 function isDefinedNumber(value: unknown): value is number {

@@ -5,9 +5,9 @@ const { expect } = require('chai');
 const { tests } = require('@iobroker/testing');
 
 const TIME_ZONE = 'Europe/Berlin';
-const FIXTURE_ENV = 'PVFORECAST_TEST_FIXTURES';
-const ADAPTER_NAMESPACE = 'pvforecast.0';
-const FIXTURE_DIR = fs.mkdtempSync(path.join(os.tmpdir(), 'pvforecast-integration-'));
+const FIXTURE_ENV = 'SOLARFORECAST_TEST_FIXTURES';
+const ADAPTER_NAMESPACE = 'solarforecast.0';
+const FIXTURE_DIR = fs.mkdtempSync(path.join(os.tmpdir(), 'solarforecast-integration-'));
 
 function formatLocalDate(date, timeZone = TIME_ZONE) {
     const parts = new Intl.DateTimeFormat('en-CA', {
@@ -155,7 +155,7 @@ async function seedStaleHourlyChannel(harness) {
 }
 
 async function configureAdapter(harness) {
-    await harness.changeAdapterConfig('pvforecast', {
+    await harness.changeAdapterConfig('solarforecast', {
         native: {
             locationMode: 'geocode',
             city: 'Berlin',

@@ -22,6 +22,7 @@ __export(forecast_service_exports, {
 });
 module.exports = __toCommonJS(forecast_service_exports);
 var import_dates = require("./dates");
+var import_location_resolver = require("./location-resolver");
 var import_open_meteo_client = require("./open-meteo-client");
 class ForecastService {
   /**
@@ -31,7 +32,9 @@ class ForecastService {
    */
   constructor(client = new import_open_meteo_client.OpenMeteoClient()) {
     this.client = client;
+    this.locationResolver = new import_location_resolver.LocationResolver(client);
   }
+  locationResolver;
   /**
    * Resolves the configured location and calculates all public adapter outputs.
    *
@@ -41,7 +44,7 @@ class ForecastService {
    */
   async fetchSnapshot(config, signal) {
     var _a, _b;
-    const resolvedLocation = await this.resolveLocation(config, signal);
+    const resolvedLocation = await this.locationResolver.resolveLocation(config, signal);
     const requestedTimeZone = config.timezoneMode === "manual" ? config.timeZone : resolvedLocation.timeZone;
     const response = await this.client.fetchForecast({
       latitude: resolvedLocation.latitude,
@@ -78,30 +81,6 @@ class ForecastService {
         energyKwh: this.sumEnergyForRange(allRows, monthRange.startDate, monthRange.endDate),
         complete: this.isRangeComplete(allRows, monthRange.startDate, monthRange.endDate)
       }
-    };
-  }
-  async resolveLocation(config, signal) {
-    var _a, _b, _c, _d, _e, _f;
-    if (config.locationMode === "manual") {
-      return {
-        resolvedName: config.city || `${(_b = (_a = config.latitude) == null ? void 0 : _a.toFixed(4)) != null ? _b : "0.0000"}, ${(_d = (_c = config.longitude) == null ? void 0 : _c.toFixed(4)) != null ? _d : "0.0000"}`,
-        countryCode: config.countryCode,
-        latitude: (_e = config.latitude) != null ? _e : 0,
-        longitude: (_f = config.longitude) != null ? _f : 0,
-        timeZone: config.timezoneMode === "manual" ? config.timeZone : "auto"
-      };
-    }
-    const geocodingResult = await this.client.geocode(
-      config.city,
-      config.countryCode || void 0,
-      signal
-    );
-    return {
-      resolvedName: geocodingResult.resolvedName,
-      countryCode: geocodingResult.countryCode,
-      latitude: geocodingResult.latitude,
-      longitude: geocodingResult.longitude,
-      timeZone: config.timezoneMode === "manual" ? config.timeZone : geocodingResult.timeZone
     };
   }
   buildHourlyRows(response, config) {

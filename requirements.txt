@@ -2,7 +2,7 @@
 
 # Basic Memory MCP
 codex mcp add basic-memory bash -c "uvx basic-memory mcp"
-codex mcp add basic-memory bash -c "uvx basic-memory mcp --project PVForecast"
+codex mcp add basic-memory bash -c "uvx basic-memory mcp --project SolarForecast"
 
 # ioBroker adapter scaffold
 npx @iobroker/create-adapter@latest

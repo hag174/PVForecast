@@ -23,20 +23,30 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 ));
 var utils = __toESM(require("@iobroker/adapter-core"));
 var import_adapter_runtime = require("./lib/adapter-runtime");
-class Pvforecast extends utils.Adapter {
+var import_location_resolver = require("./lib/location-resolver");
+class Solarforecast extends utils.Adapter {
   runtime = new import_adapter_runtime.AdapterRuntime(this);
+  locationResolver = new import_location_resolver.LocationResolver();
   constructor(options = {}) {
     super({
       ...options,
-      name: "pvforecast"
+      name: "solarforecast"
     });
     this.on("ready", this.runtime.onReady.bind(this.runtime));
     this.on("unload", this.runtime.onUnload.bind(this.runtime));
+    this.on("message", this.onMessage.bind(this));
+  }
+  async onMessage(obj) {
+    if (!obj || obj.command !== import_location_resolver.RESOLVE_LOCATION_CONFIG_COMMAND || !obj.callback) {
+      return;
+    }
+    const response = await this.locationResolver.validateGeocodeLocation(obj.message);
+    this.sendTo(obj.from, obj.command, response, obj.callback);
   }
 }
 if (require.main !== module) {
-  module.exports = (options) => new Pvforecast(options);
+  module.exports = (options) => new Solarforecast(options);
 } else {
-  (() => new Pvforecast())();
+  (() => new Solarforecast())();
 }
 //# sourceMappingURL=main.js.map

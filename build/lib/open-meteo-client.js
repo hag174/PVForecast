@@ -22,7 +22,7 @@ __export(open_meteo_client_exports, {
 });
 module.exports = __toCommonJS(open_meteo_client_exports);
 var import_promises = require("node:fs/promises");
-const TEST_FIXTURES_ENV = "PVFORECAST_TEST_FIXTURES";
+const TEST_FIXTURES_ENV = "SOLARFORECAST_TEST_FIXTURES";
 const fixtureCache = /* @__PURE__ */ new Map();
 function isDefinedNumber(value) {
   return typeof value === "number" && Number.isFinite(value);
