@@ -26,7 +26,7 @@ tags:
 - `npm run build` passed.
 
 ## Notable implementation choices
-- Hourly states are keyed by sanitized local timestamps so DST days can be represented without fixed 24-slot assumptions.
+- Hourly states are keyed by DST-safe local timestamp keys with deterministic suffixes for repeated fallback hours.
 - The adapter keeps the last successful forecast values when refreshing fails and only updates connection and error states.
 - Calendar week and month totals expose explicit completeness flags instead of estimating missing ranges.
 
@@ -72,3 +72,30 @@ tags:
 - `npm run test:integration` could not complete in the current local environment because a JS-Controller instance was already running.
 - The highest remaining quality risk is missing automated coverage for `src/main.ts`, especially timer handling, ioBroker state writes, stale hourly state cleanup, and error-state updates.
 - Follow-up: add adapter runtime tests that exercise the real `Pvforecast` class and verify the created state tree, not only the isolated service/helper modules.
+
+## Quality hardening follow-up 2026-03-21
+- Extracted the refresh orchestration from `src/main.ts` into a dedicated runtime layer so timer handling, state writes, stale hourly cleanup, error-state updates, unload cleanup and overlap handling are covered by direct unit tests.
+- Added Open-Meteo request abort support with a 30 second timeout and single-flight scheduling so scheduled refreshes are skipped while a prior refresh is still in progress.
+- Replaced raw sanitized local timestamp keys with DST-safe hourly keys that add deterministic suffixes for repeated fallback hours.
+- Removed the unused `refreshIntervalMinutes` field from the effective config and adjusted tests accordingly.
+- Switched TypeScript coverage from `nyc` to `c8` and verified meaningful source coverage.
+
+## Verification update 2026-03-21
+- `npm run check` passed.
+- `npm run lint` passed.
+- `npm test` passed.
+- `npm run coverage` passed with 96.01% statements, 75.44% branches, 100% functions and 96.01% lines.
+- `npm run build` passed.
+- `npm run test:integration` is still blocked in the current local environment because a JS-Controller instance is already running.
+
+## Integration test expansion 2026-03-21
+- Extended `test/integration.js` with fixture-driven integration suites that validate successful forecast state publishing and the refresh error path against a real JS-Controller test harness.
+- Added a test-only Open-Meteo fixture hook via `PVFORECAST_TEST_FIXTURES` so integration tests can avoid live network access while still exercising the real adapter process.
+- The success-path integration test now verifies `info.connection`, `info.lastError`, `location.*`, `summary.today.energy_kwh`, daily forecast states, hourly JSON output, and stale hourly channel cleanup.
+- The failure-path integration test now verifies that invalid forecast payloads keep the adapter alive but set `info.connection = false` and populate `info.lastError`.
+- Re-verified `npm run test:integration` successfully after stopping the host JS-Controller; the suite now reports 3 passing tests.
+
+## Metadata alignment fix 2026-03-21
+- Corrected `info.lastUpdate` from role `value.time` to `value.datetime` while keeping the state value as the existing ISO datetime string.
+- Added regression coverage in the runtime unit test and in the integration success path so the object metadata is checked alongside the state value.
+- Re-verified `npm run check` and `npm run build`; the TypeScript test suite passed, while `npm test` is currently blocked by an unrelated existing version mismatch between `package.json` (`0.0.1`) and `io-package.json` (`0.2.5`).

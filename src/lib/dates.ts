@@ -92,6 +92,33 @@ export function sanitizeStateKey(timestamp: string): string {
 }
 
 /**
+ * Creates stable ioBroker object keys for hourly timestamps, including repeated local hours.
+ *
+ * @param timestamps - Local timestamps in API order.
+ * @returns A unique object key for each timestamp.
+ */
+export function createHourlyStateKeys(timestamps: readonly string[]): string[] {
+    const totalOccurrences = new Map<string, number>();
+    for (const timestamp of timestamps) {
+        totalOccurrences.set(timestamp, (totalOccurrences.get(timestamp) ?? 0) + 1);
+    }
+
+    const seenOccurrences = new Map<string, number>();
+
+    return timestamps.map(timestamp => {
+        const baseKey = sanitizeStateKey(timestamp);
+        const totalCount = totalOccurrences.get(timestamp) ?? 0;
+        if (totalCount <= 1) {
+            return baseKey;
+        }
+
+        const occurrence = (seenOccurrences.get(timestamp) ?? 0) + 1;
+        seenOccurrences.set(timestamp, occurrence);
+        return `${baseKey}__${occurrence}`;
+    });
+}
+
+/**
  * Rounds floating-point values to a predictable number of decimals for state output.
  *
  * @param value - Numeric value to round.

@@ -6,7 +6,6 @@ const DEFAULT_TILT_DEG = 0;
 const DEFAULT_AZIMUTH_DEG = 0;
 const DEFAULT_ARRAY_AREA_M2 = 10;
 const DEFAULT_PANEL_EFFICIENCY_PCT = 22;
-const DEFAULT_REFRESH_INTERVAL_MINUTES = 60;
 
 function normalizeOptionalText(value: unknown): string {
     return typeof value === 'string' ? value.trim() : '';
@@ -102,6 +101,5 @@ export function resolveEffectiveConfig(config: ioBroker.AdapterConfig): Effectiv
         azimuthDeg,
         arrayAreaM2,
         panelEfficiencyPct,
-        refreshIntervalMinutes: DEFAULT_REFRESH_INTERVAL_MINUTES,
     };
 }

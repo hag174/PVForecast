@@ -20,6 +20,7 @@ var dates_exports = {};
 __export(dates_exports, {
   addDays: () => addDays,
   boundaryTimestamp: () => boundaryTimestamp,
+  createHourlyStateKeys: () => createHourlyStateKeys,
   formatLocalDate: () => formatLocalDate,
   getIsoWeekRange: () => getIsoWeekRange,
   getMonthRange: () => getMonthRange,
@@ -72,6 +73,25 @@ function boundaryTimestamp(dateString, endOfDay) {
 function sanitizeStateKey(timestamp) {
   return timestamp.replace(/[^a-zA-Z0-9]/g, "_");
 }
+function createHourlyStateKeys(timestamps) {
+  var _a;
+  const totalOccurrences = /* @__PURE__ */ new Map();
+  for (const timestamp of timestamps) {
+    totalOccurrences.set(timestamp, ((_a = totalOccurrences.get(timestamp)) != null ? _a : 0) + 1);
+  }
+  const seenOccurrences = /* @__PURE__ */ new Map();
+  return timestamps.map((timestamp) => {
+    var _a2, _b;
+    const baseKey = sanitizeStateKey(timestamp);
+    const totalCount = (_a2 = totalOccurrences.get(timestamp)) != null ? _a2 : 0;
+    if (totalCount <= 1) {
+      return baseKey;
+    }
+    const occurrence = ((_b = seenOccurrences.get(timestamp)) != null ? _b : 0) + 1;
+    seenOccurrences.set(timestamp, occurrence);
+    return `${baseKey}__${occurrence}`;
+  });
+}
 function roundNumber(value, fractionDigits = 3) {
   return Number(value.toFixed(fractionDigits));
 }
@@ -79,6 +99,7 @@ function roundNumber(value, fractionDigits = 3) {
 0 && (module.exports = {
   addDays,
   boundaryTimestamp,
+  createHourlyStateKeys,
   formatLocalDate,
   getIsoWeekRange,
   getMonthRange,
