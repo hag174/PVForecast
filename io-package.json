@@ -1,6 +1,6 @@
 {
     "common": {
-        "name": "pvforecast",
+        "name": "solarforecast",
         "version": "0.2.5",
         "news": {
             "0.2.5": {
@@ -18,8 +18,8 @@
             }
         },
         "titleLang": {
-            "en": "PV Forecast",
-            "de": "PV-Prognose",
+            "en": "SolarForecast",
+            "de": "SolarForecast",
             "ru": "Прогноз солнечной энергии",
             "pt": "Previsão fotovoltaica",
             "nl": "PV-voorspelling",
@@ -50,10 +50,10 @@
             "license": "MIT"
         },
         "platform": "Javascript/Node.js",
-        "icon": "pvforecast.png",
+        "icon": "solarforecast.png",
         "enabled": true,
-        "extIcon": "https://raw.githubusercontent.com/hag174/PVForecast/main/admin/pvforecast.png",
-        "readme": "https://github.com/hag174/PVForecast/blob/main/README.md",
+        "extIcon": "https://raw.githubusercontent.com/hag174/SolarForecast/main/admin/solarforecast.png",
+        "readme": "https://github.com/hag174/SolarForecast/blob/main/README.md",
         "loglevel": "info",
         "tier": 3,
         "mode": "daemon",
@@ -64,6 +64,7 @@
         "adminUI": {
             "config": "json"
         },
+        "messagebox": true,
         "dependencies": [
             {
                 "js-controller": ">=6.0.11"

@@ -17,6 +17,16 @@ export interface EffectiveConfig {
     panelEfficiencyPct: number;
 }
 
+export interface LocationResolutionConfig {
+    locationMode: LocationMode;
+    city: string;
+    countryCode: string;
+    latitude: number | null;
+    longitude: number | null;
+    timezoneMode: TimezoneMode;
+    timeZone: string;
+}
+
 export interface GeocodingResult {
     resolvedName: string;
     countryCode: string;
@@ -68,4 +78,18 @@ export interface OpenMeteoForecastResponse {
         global_tilted_irradiance?: Array<number | null>;
         cloud_cover?: Array<number | null>;
     };
+}
+
+export interface AdminLocationValidationRequest {
+    city?: unknown;
+    countryCode?: unknown;
+    timezoneMode?: unknown;
+    timezone?: unknown;
+}
+
+export interface AdminLocationValidationResponse {
+    native: Record<string, string | number>;
+    text: string;
+    icon?: string;
+    style?: Record<string, string>;
 }

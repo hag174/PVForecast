@@ -1,19 +1,159 @@
 {
-    "i18n": false,
+    "i18n": {
+        "Location mode": {
+            "en": "Location mode",
+            "de": "Standortmodus"
+        },
+        "Choose whether SolarForecast resolves a city or uses manual coordinates.": {
+            "en": "Choose whether SolarForecast resolves a city or uses manual coordinates.",
+            "de": "Wählen Sie, ob SolarForecast eine Stadt auflösen oder manuelle Koordinaten verwenden soll."
+        },
+        "Geocode city": {
+            "en": "Geocode city",
+            "de": "Stadt auflösen"
+        },
+        "Resolve the site from city and country code using Open-Meteo.": {
+            "en": "Resolve the site from city and country code using Open-Meteo.",
+            "de": "Löst den Standort über Stadt und Ländercode mit Open-Meteo auf."
+        },
+        "Manual coordinates": {
+            "en": "Manual coordinates",
+            "de": "Manuelle Koordinaten"
+        },
+        "Use latitude and longitude exactly as entered below.": {
+            "en": "Use latitude and longitude exactly as entered below.",
+            "de": "Verwendet Breiten- und Längengrad genau wie unten eingegeben."
+        },
+        "City": {
+            "en": "City",
+            "de": "Stadt"
+        },
+        "Enter the city to resolve. In manual mode this remains an optional display label.": {
+            "en": "Enter the city to resolve. In manual mode this remains an optional display label.",
+            "de": "Geben Sie die aufzulösende Stadt ein. Im manuellen Modus bleibt dies eine optionale Anzeige-Bezeichnung."
+        },
+        "Country code": {
+            "en": "Country code",
+            "de": "Ländercode"
+        },
+        "Optional two-letter ISO code such as DE or AT to narrow down the city search.": {
+            "en": "Optional two-letter ISO code such as DE or AT to narrow down the city search.",
+            "de": "Optionaler zweistelliger ISO-Code wie DE oder AT, um die Stadtsuche einzugrenzen."
+        },
+        "City check status": {
+            "en": "City check status",
+            "de": "Status der Stadtprüfung"
+        },
+        "Shows whether the current city and country were validated and which values will be used.": {
+            "en": "Shows whether the current city and country were validated and which values will be used.",
+            "de": "Zeigt an, ob die aktuelle Stadt- und Länderauswahl geprüft wurde und welche Werte verwendet werden."
+        },
+        "Check city and apply": {
+            "en": "Check city and apply",
+            "de": "Stadt prüfen und übernehmen"
+        },
+        "Queries Open-Meteo, shows whether the city was found and applies matching coordinates.": {
+            "en": "Queries Open-Meteo, shows whether the city was found and applies matching coordinates.",
+            "de": "Fragt Open-Meteo ab, zeigt an, ob die Stadt gefunden wurde, und übernimmt passende Koordinaten."
+        },
+        "Latitude": {
+            "en": "Latitude",
+            "de": "Breitengrad"
+        },
+        "Resolved automatically in city mode and used directly in manual mode.": {
+            "en": "Resolved automatically in city mode and used directly in manual mode.",
+            "de": "Wird im Stadtmodus automatisch ermittelt und im manuellen Modus direkt verwendet."
+        },
+        "Longitude": {
+            "en": "Longitude",
+            "de": "Längengrad"
+        },
+        "Timezone mode": {
+            "en": "Timezone mode",
+            "de": "Zeitzonenmodus"
+        },
+        "Select whether the timezone comes from the resolved location or from a manual override.": {
+            "en": "Select whether the timezone comes from the resolved location or from a manual override.",
+            "de": "Wählen Sie, ob die Zeitzone aus dem aufgelösten Standort oder aus einer manuellen Vorgabe kommt."
+        },
+        "Automatic": {
+            "en": "Automatic",
+            "de": "Automatisch"
+        },
+        "Use the timezone returned by the city lookup or forecast API.": {
+            "en": "Use the timezone returned by the city lookup or forecast API.",
+            "de": "Verwendet die Zeitzone aus der Stadtsuche oder der Forecast-API."
+        },
+        "Manual override": {
+            "en": "Manual override",
+            "de": "Manuelle Vorgabe"
+        },
+        "Keep the timezone entered below even after checking the city.": {
+            "en": "Keep the timezone entered below even after checking the city.",
+            "de": "Behält die unten eingetragene Zeitzone auch nach der Stadtprüfung bei."
+        },
+        "Timezone": {
+            "en": "Timezone",
+            "de": "Zeitzone"
+        },
+        "Editable only in manual timezone mode. In automatic mode the verified city determines the timezone.": {
+            "en": "Editable only in manual timezone mode. In automatic mode the verified city determines the timezone.",
+            "de": "Nur im manuellen Zeitzonenmodus editierbar. Im Automatikmodus bestimmt die geprüfte Stadt die Zeitzone."
+        },
+        "Tilt in degrees": {
+            "en": "Tilt in degrees",
+            "de": "Neigung in Grad"
+        },
+        "Panel tilt from 0 to 90 degrees. This value is passed to the forecast API.": {
+            "en": "Panel tilt from 0 to 90 degrees. This value is passed to the forecast API.",
+            "de": "Modulneigung von 0 bis 90 Grad. Dieser Wert wird an die Forecast-API übergeben."
+        },
+        "Azimuth in degrees": {
+            "en": "Azimuth in degrees",
+            "de": "Azimut in Grad"
+        },
+        "0 points south. Negative values rotate east, positive values rotate west.": {
+            "en": "0 points south. Negative values rotate east, positive values rotate west.",
+            "de": "0 zeigt nach Süden. Negative Werte drehen nach Osten, positive Werte nach Westen."
+        },
+        "Array area in m²": {
+            "en": "Array area in m²",
+            "de": "Anlagenfläche in m²"
+        },
+        "Total active panel area in square meters for the energy calculation.": {
+            "en": "Total active panel area in square meters for the energy calculation.",
+            "de": "Gesamte aktive Modulfläche in Quadratmetern für die Energieberechnung."
+        },
+        "Panel efficiency in percent": {
+            "en": "Panel efficiency in percent",
+            "de": "Moduleffizienz in Prozent"
+        },
+        "Conversion efficiency of the PV modules. Typical values are between 15 and 25 percent.": {
+            "en": "Conversion efficiency of the PV modules. Typical values are between 15 and 25 percent.",
+            "de": "Wirkungsgrad der PV-Module. Typische Werte liegen zwischen 15 und 25 Prozent."
+        },
+        "Validate the current city selection before saving while the instance is running.": {
+            "en": "Validate the current city selection before saving while the instance is running.",
+            "de": "Prüfen Sie die aktuelle Stadtauswahl, bevor Sie speichern, solange die Instanz läuft."
+        }
+    },
     "type": "panel",
     "items": {
         "locationMode": {
             "type": "select",
             "label": "Location mode",
+            "help": "Choose whether SolarForecast resolves a city or uses manual coordinates.",
             "newLine": true,
             "options": [
                 {
                     "label": "Geocode city",
-                    "value": "geocode"
+                    "value": "geocode",
+                    "description": "Resolve the site from city and country code using Open-Meteo."
                 },
                 {
                     "label": "Manual coordinates",
-                    "value": "manual"
+                    "value": "manual",
+                    "description": "Use latitude and longitude exactly as entered below."
                 }
             ],
             "xs": 12,
@@ -25,7 +165,7 @@
         "city": {
             "type": "text",
             "label": "City",
-            "help": "Used in geocode mode and as a display label in manual mode.",
+            "help": "Enter the city to resolve. In manual mode this remains an optional display label.",
             "newLine": true,
             "xs": 12,
             "sm": 12,
@@ -36,7 +176,52 @@
         "countryCode": {
             "type": "text",
             "label": "Country code",
-            "help": "Optional ISO country code such as DE or AT to disambiguate geocoding results.",
+            "help": "Optional two-letter ISO code such as DE or AT to narrow down the city search.",
+            "disabled": "data.locationMode === 'manual'",
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 4
+        },
+        "_locationValidationDisplay": {
+            "type": "text",
+            "label": "City check status",
+            "help": "Shows whether the current city and country were validated and which values will be used.",
+            "readOnly": true,
+            "hidden": "data.locationMode !== 'geocode'",
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 8,
+            "xl": 8,
+            "onChange": {
+                "alsoDependsOn": [
+                    "locationMode",
+                    "city",
+                    "countryCode",
+                    "_validatedLocationKey",
+                    "_locationValidationState",
+                    "_locationValidationMessage"
+                ],
+                "calculateFunc": "const city = (data.city || '').trim(); const country = (data.countryCode || '').trim().toUpperCase(); const current = city ? `${city}|${country}` : ''; const validated = data._validatedLocationKey || ''; if (!city) { return 'Enter a city and run the check.'; } if (data._locationValidationState === 'success' && validated === current) { return data._locationValidationMessage || 'Found.'; } if (data._locationValidationState === 'error' && validated === current) { return data._locationValidationMessage || 'Location could not be resolved.'; } if (_alive === false) { return 'Start the instance to validate the current city directly in the dialog.'; } return 'Not checked yet.';"
+            }
+        },
+        "validateLocation": {
+            "type": "sendTo",
+            "label": "Check city and apply",
+            "help": "Queries Open-Meteo, shows whether the city was found and applies matching coordinates.",
+            "command": "resolveLocationConfig",
+            "jsonData": "{\"city\":\"${data.city}\",\"countryCode\":\"${data.countryCode}\",\"timezoneMode\":\"${data.timezoneMode}\",\"timezone\":\"${data.timezone}\"}",
+            "variant": "contained",
+            "icon": "search",
+            "useNative": true,
+            "showProcess": true,
+            "timeout": 30000,
+            "hidden": "data.locationMode !== 'geocode'",
+            "disabled": "_alive === false",
             "newLine": true,
             "xs": 12,
             "sm": 12,
@@ -47,7 +232,8 @@
         "latitude": {
             "type": "number",
             "label": "Latitude",
-            "help": "Only required in manual coordinate mode.",
+            "help": "Resolved automatically in city mode and used directly in manual mode.",
+            "disabled": "data.locationMode === 'geocode'",
             "newLine": true,
             "xs": 12,
             "sm": 12,
@@ -58,7 +244,8 @@
         "longitude": {
             "type": "number",
             "label": "Longitude",
-            "help": "Only required in manual coordinate mode.",
+            "help": "Resolved automatically in city mode and used directly in manual mode.",
+            "disabled": "data.locationMode === 'geocode'",
             "newLine": true,
             "xs": 12,
             "sm": 12,
@@ -69,15 +256,18 @@
         "timezoneMode": {
             "type": "select",
             "label": "Timezone mode",
+            "help": "Select whether the timezone comes from the resolved location or from a manual override.",
             "newLine": true,
             "options": [
                 {
                     "label": "Automatic",
-                    "value": "auto"
+                    "value": "auto",
+                    "description": "Use the timezone returned by the city lookup or forecast API."
                 },
                 {
                     "label": "Manual override",
-                    "value": "manual"
+                    "value": "manual",
+                    "description": "Keep the timezone entered below even after checking the city."
                 }
             ],
             "xs": 12,
@@ -89,7 +279,8 @@
         "timezone": {
             "type": "text",
             "label": "Timezone",
-            "help": "Used only when timezone mode is set to manual override.",
+            "help": "Editable only in manual timezone mode. In automatic mode the verified city determines the timezone.",
+            "disabled": "data.timezoneMode !== 'manual'",
             "newLine": true,
             "xs": 12,
             "sm": 12,
@@ -100,6 +291,7 @@
         "tiltDeg": {
             "type": "number",
             "label": "Tilt in degrees",
+            "help": "Panel tilt from 0 to 90 degrees. This value is passed to the forecast API.",
             "newLine": true,
             "xs": 12,
             "sm": 12,
@@ -121,6 +313,9 @@
         "arrayAreaM2": {
             "type": "number",
             "label": "Array area in m²",
+            "help": "Total active panel area in square meters for the energy calculation.",
+            "min": 0.1,
+            "step": 0.1,
             "newLine": true,
             "xs": 12,
             "sm": 12,
@@ -131,12 +326,53 @@
         "panelEfficiencyPct": {
             "type": "number",
             "label": "Panel efficiency in percent",
+            "help": "Conversion efficiency of the PV modules. Typical values are between 15 and 25 percent.",
+            "min": 0.1,
+            "max": 100,
+            "step": 0.1,
             "newLine": true,
             "xs": 12,
             "sm": 12,
             "md": 6,
             "lg": 4,
             "xl": 4
+        },
+        "_validatedLocationKey": {
+            "type": "text",
+            "hidden": true,
+            "readOnly": true,
+            "default": ""
+        },
+        "_locationValidationState": {
+            "type": "text",
+            "hidden": true,
+            "readOnly": true,
+            "default": ""
+        },
+        "_locationValidationMessage": {
+            "type": "text",
+            "hidden": true,
+            "readOnly": true,
+            "default": ""
+        },
+        "_locationValidationGuard": {
+            "type": "text",
+            "hidden": true,
+            "readOnly": true,
+            "default": "",
+            "validator": "data.locationMode !== 'geocode' || _alive === false || (() => { const city = (data.city || '').trim(); const country = (data.countryCode || '').trim().toUpperCase(); const current = city ? `${city}|${country}` : ''; return current !== '' && data._locationValidationState === 'success' && data._validatedLocationKey === current; })()",
+            "validatorNoSaveOnError": true,
+            "validatorErrorText": "Validate the current city selection before saving while the instance is running.",
+            "onChange": {
+                "alsoDependsOn": [
+                    "locationMode",
+                    "city",
+                    "countryCode",
+                    "_validatedLocationKey",
+                    "_locationValidationState"
+                ],
+                "calculateFunc": "const city = (data.city || '').trim(); const country = (data.countryCode || '').trim().toUpperCase(); return `${data.locationMode || ''}|${city}|${country}|${data._validatedLocationKey || ''}|${data._locationValidationState || ''}|${_alive ? 'alive' : 'stopped'}`;"
+            }
         }
     }
 }

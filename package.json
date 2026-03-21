@@ -1,13 +1,13 @@
 {
-  "name": "iobroker.pvforecast",
-  "version": "0.0.1",
+  "name": "iobroker.solarforecast",
+  "version": "0.2.5",
   "description": "Solar forecast adapter for ioBroker using Open-Meteo",
   "author": {
     "name": "Hagen",
     "email": "no-reply@example.com"
   },
   "contributors": [],
-  "homepage": "https://github.com/hag174/PVForecast",
+  "homepage": "https://github.com/hag174/SolarForecast",
   "license": "MIT",
   "keywords": [
     "solar",
@@ -17,7 +17,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/hag174/PVForecast.git"
+    "url": "https://github.com/hag174/SolarForecast.git"
   },
   "engines": {
     "node": ">= 20"
@@ -91,7 +91,7 @@
     ]
   },
   "bugs": {
-    "url": "https://github.com/hag174/PVForecast/issues"
+    "url": "https://github.com/hag174/SolarForecast/issues"
   },
   "readmeFilename": "README.md"
 }

@@ -7,7 +7,7 @@ const DEFAULT_AZIMUTH_DEG = 0;
 const DEFAULT_ARRAY_AREA_M2 = 10;
 const DEFAULT_PANEL_EFFICIENCY_PCT = 22;
 
-function normalizeOptionalText(value: unknown): string {
+export function normalizeOptionalText(value: unknown): string {
     return typeof value === 'string' ? value.trim() : '';
 }
 
@@ -22,13 +22,26 @@ function toFiniteNumber(value: unknown, fieldName: string, fallback?: number): n
     throw new Error(`The configuration field "${fieldName}" must be a number.`);
 }
 
-function isValidTimeZone(timeZone: string): boolean {
+export function normalizeCountryCode(value: unknown): string {
+    return normalizeOptionalText(value).toUpperCase();
+}
+
+export function isValidTimeZone(timeZone: string): boolean {
     try {
         new Intl.DateTimeFormat('en-US', { timeZone }).format(new Date());
         return true;
     } catch {
         return false;
     }
+}
+
+export function buildLocationValidationKey(city: string, countryCode: string): string {
+    const normalizedCity = normalizeOptionalText(city);
+    if (!normalizedCity) {
+        return '';
+    }
+
+    return `${normalizedCity}|${normalizeCountryCode(countryCode)}`;
 }
 
 /**
@@ -42,7 +55,7 @@ export function resolveEffectiveConfig(config: ioBroker.AdapterConfig): Effectiv
     const timezoneMode: TimezoneMode = config.timezoneMode === 'manual' ? 'manual' : 'auto';
 
     const city = normalizeOptionalText(config.city) || DEFAULT_CITY;
-    const countryCode = normalizeOptionalText(config.countryCode).toUpperCase();
+    const countryCode = normalizeCountryCode(config.countryCode);
 
     if (countryCode && !/^[A-Z]{2}$/.test(countryCode)) {
         throw new Error('countryCode must contain a two-letter ISO country code.');

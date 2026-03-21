@@ -1,4 +1,4 @@
-# PV Forecast Adapter
+# SolarForecast Adapter
 
 ## Purpose
 

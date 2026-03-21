@@ -1,6 +1,6 @@
-![Logo](admin/pvforecast.png)
+![Logo](admin/solarforecast.png)
 
-# ioBroker.pvforecast
+# ioBroker.solarforecast
 
 Solar forecast adapter for ioBroker using Open-Meteo.
 
@@ -21,13 +21,16 @@ The adapter uses a JSON Config based admin UI with these fields:
 - `locationMode`: `geocode` or `manual`
 - `city`: default `Berlin`
 - `countryCode`: optional ISO country code such as `DE`
-- `latitude` and `longitude`: used in manual mode
+- `latitude` and `longitude`: auto-filled after a successful city check and editable in manual mode
 - `timezoneMode`: `auto` or `manual`
 - `timezone`: manual override, default `Europe/Berlin`
 - `tiltDeg`: panel tilt in degrees, default `0`
 - `azimuthDeg`: panel azimuth in degrees, default `0`
 - `arrayAreaM2`: panel area in square meters, default `10`
 - `panelEfficiencyPct`: panel efficiency in percent, default `22`
+
+In geocode mode the settings dialog can validate the configured city directly against Open-Meteo.
+Successful validation updates the effective coordinates and timezone preview in the form and enables saving while the current city selection stays unchanged.
 
 The adapter refreshes the forecast on startup and then hourly.
 Each Open-Meteo refresh uses a 30 second request timeout and skips overlapping scheduled runs while a previous refresh is still active.
@@ -79,10 +82,10 @@ Project-specific unit tests live in `Tests/`. Template package and integration t
 
 ## Changelog
 
-### **WORK IN PROGRESS**
+### 0.2.5
 
-- (Hagen) scaffolded the TypeScript adapter
-- (Hagen) implemented Open-Meteo based PV forecast calculation and ioBroker state publishing
+- (Hagen) renamed the adapter to SolarForecast
+- (Hagen) added direct city validation and auto-filled coordinates in the admin dialog
 
 ## License
 

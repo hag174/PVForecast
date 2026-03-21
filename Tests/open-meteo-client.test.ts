@@ -10,7 +10,7 @@ describe('OpenMeteoClient', () => {
     let fixtureDir: string | undefined;
 
     afterEach(async () => {
-        delete process.env.PVFORECAST_TEST_FIXTURES;
+        delete process.env.SOLARFORECAST_TEST_FIXTURES;
         if (fixtureDir) {
             await rm(fixtureDir, { recursive: true, force: true });
             fixtureDir = undefined;
@@ -90,7 +90,7 @@ describe('OpenMeteoClient', () => {
     });
 
     it('uses test fixtures instead of live HTTP requests when configured', async () => {
-        fixtureDir = await mkdtemp(path.join(os.tmpdir(), 'pvforecast-client-'));
+        fixtureDir = await mkdtemp(path.join(os.tmpdir(), 'solarforecast-client-'));
         const fixturePath = path.join(fixtureDir, 'fixtures.json');
         await writeFile(
             fixturePath,
@@ -118,7 +118,7 @@ describe('OpenMeteoClient', () => {
             }),
             'utf8',
         );
-        process.env.PVFORECAST_TEST_FIXTURES = fixturePath;
+        process.env.SOLARFORECAST_TEST_FIXTURES = fixturePath;
 
         const fetchStub = sinon.stub().rejects(new Error('fetch should not be called'));
         const client = new OpenMeteoClient(fetchStub as unknown as typeof fetch);

@@ -18,6 +18,10 @@ var __copyProps = (to, from, except, desc) => {
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var config_exports = {};
 __export(config_exports, {
+  buildLocationValidationKey: () => buildLocationValidationKey,
+  isValidTimeZone: () => isValidTimeZone,
+  normalizeCountryCode: () => normalizeCountryCode,
+  normalizeOptionalText: () => normalizeOptionalText,
   resolveEffectiveConfig: () => resolveEffectiveConfig
 });
 module.exports = __toCommonJS(config_exports);
@@ -40,6 +44,9 @@ function toFiniteNumber(value, fieldName, fallback) {
   }
   throw new Error(`The configuration field "${fieldName}" must be a number.`);
 }
+function normalizeCountryCode(value) {
+  return normalizeOptionalText(value).toUpperCase();
+}
 function isValidTimeZone(timeZone) {
   try {
     new Intl.DateTimeFormat("en-US", { timeZone }).format(/* @__PURE__ */ new Date());
@@ -48,11 +55,18 @@ function isValidTimeZone(timeZone) {
     return false;
   }
 }
+function buildLocationValidationKey(city, countryCode) {
+  const normalizedCity = normalizeOptionalText(city);
+  if (!normalizedCity) {
+    return "";
+  }
+  return `${normalizedCity}|${normalizeCountryCode(countryCode)}`;
+}
 function resolveEffectiveConfig(config) {
   const locationMode = config.locationMode === "manual" ? "manual" : "geocode";
   const timezoneMode = config.timezoneMode === "manual" ? "manual" : "auto";
   const city = normalizeOptionalText(config.city) || DEFAULT_CITY;
-  const countryCode = normalizeOptionalText(config.countryCode).toUpperCase();
+  const countryCode = normalizeCountryCode(config.countryCode);
   if (countryCode && !/^[A-Z]{2}$/.test(countryCode)) {
     throw new Error("countryCode must contain a two-letter ISO country code.");
   }
@@ -108,6 +122,10 @@ function resolveEffectiveConfig(config) {
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
+  buildLocationValidationKey,
+  isValidTimeZone,
+  normalizeCountryCode,
+  normalizeOptionalText,
   resolveEffectiveConfig
 });
 //# sourceMappingURL=config.js.map
