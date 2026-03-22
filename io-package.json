@@ -1,8 +1,21 @@
 {
     "common": {
         "name": "solarforecast",
-        "version": "0.2.6",
+        "version": "0.5.0",
         "news": {
+            "0.5.0": {
+                "en": "Replaced panel area and efficiency with peak power, fixed the city validation status display, and added a remaining-today energy summary.",
+                "de": "Anlagenflaeche und Effizienz durch Peakleistung ersetzt, Anzeige der Stadtpruefung korrigiert und Rest-des-Tages-Energiesumme hinzugefuegt.",
+                "ru": "Panel area and efficiency were replaced with peak power, the city validation status display was fixed, and a remaining-today energy summary was added.",
+                "pt": "Panel area and efficiency were replaced with peak power, the city validation status display was fixed, and a remaining-today energy summary was added.",
+                "nl": "Panel area and efficiency were replaced with peak power, the city validation status display was fixed, and a remaining-today energy summary was added.",
+                "fr": "Panel area and efficiency were replaced with peak power, the city validation status display was fixed, and a remaining-today energy summary was added.",
+                "it": "Panel area and efficiency were replaced with peak power, the city validation status display was fixed, and a remaining-today energy summary was added.",
+                "es": "Panel area and efficiency were replaced with peak power, the city validation status display was fixed, and a remaining-today energy summary was added.",
+                "pl": "Panel area and efficiency were replaced with peak power, the city validation status display was fixed, and a remaining-today energy summary was added.",
+                "uk": "Panel area and efficiency were replaced with peak power, the city validation status display was fixed, and a remaining-today energy summary was added.",
+                "zh-cn": "Panel area and efficiency were replaced with peak power, the city validation status display was fixed, and a remaining-today energy summary was added."
+            },
             "0.2.5": {
                 "en": "initial release",
                 "de": "Erstveröffentlichung",
@@ -86,8 +99,7 @@
         "timezone": "Europe/Berlin",
         "tiltDeg": 0,
         "azimuthDeg": 0,
-        "arrayAreaM2": 10,
-        "panelEfficiencyPct": 22
+        "peakPowerKwp": 2.2
     },
     "objects": [],
     "instanceObjects": [

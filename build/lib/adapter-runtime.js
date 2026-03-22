@@ -166,6 +166,14 @@ class AdapterRuntime {
     await this.ensureChannel("summary", "Energy summaries");
     await this.ensureState("summary.today.energy_kwh", "Today energy forecast", "number", "value", false, "kWh");
     await this.ensureState(
+      "summary.today.remaining_energy_kwh",
+      "Remaining energy forecast for today",
+      "number",
+      "value",
+      false,
+      "kWh"
+    );
+    await this.ensureState(
       "summary.currentWeek.energy_kwh",
       "Current week energy forecast",
       "number",
@@ -226,6 +234,7 @@ class AdapterRuntime {
     await this.adapter.setStateAsync("forecast.json.summary", {
       val: JSON.stringify({
         todayEnergyKwh: snapshot.todayEnergyKwh,
+        todayRemainingEnergyKwh: snapshot.todayRemainingEnergyKwh,
         currentWeek: snapshot.currentWeek,
         currentMonth: snapshot.currentMonth
       }),
@@ -241,6 +250,10 @@ class AdapterRuntime {
   }
   async writeSummaryStates(snapshot) {
     await this.adapter.setStateAsync("summary.today.energy_kwh", { val: snapshot.todayEnergyKwh, ack: true });
+    await this.adapter.setStateAsync("summary.today.remaining_energy_kwh", {
+      val: snapshot.todayRemainingEnergyKwh,
+      ack: true
+    });
     await this.adapter.setStateAsync("summary.currentWeek.energy_kwh", {
       val: snapshot.currentWeek.energyKwh,
       ack: true

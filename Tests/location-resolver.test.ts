@@ -3,6 +3,7 @@ import sinon from 'sinon';
 
 import {
     LOCATION_VALIDATED_KEY_FIELD,
+    LOCATION_VALIDATION_DISPLAY_TEXT_FIELD,
     LOCATION_VALIDATION_MESSAGE_FIELD,
     LOCATION_VALIDATION_STATE_FIELD,
     LocationResolver,
@@ -35,6 +36,7 @@ describe('LocationResolver', () => {
         expect(result.native[LOCATION_VALIDATED_KEY_FIELD]).to.equal('Berlin|DE');
         expect(result.native[LOCATION_VALIDATION_STATE_FIELD]).to.equal('success');
         expect(result.native[LOCATION_VALIDATION_MESSAGE_FIELD]).to.contain('Found: Berlin, Germany');
+        expect(result.native[LOCATION_VALIDATION_DISPLAY_TEXT_FIELD]).to.contain('Found: Berlin, Germany');
     });
 
     it('keeps the manual timezone override during a successful city validation', async () => {
@@ -59,6 +61,7 @@ describe('LocationResolver', () => {
         expect(result.native.countryCode).to.equal('DE');
         expect(result.native[LOCATION_VALIDATED_KEY_FIELD]).to.equal('Berlin|DE');
         expect(result.native[LOCATION_VALIDATION_MESSAGE_FIELD]).to.contain('Europe/Paris');
+        expect(result.native[LOCATION_VALIDATION_DISPLAY_TEXT_FIELD]).to.contain('Europe/Paris');
     });
 
     it('stores the validation key for the applied country code after a successful lookup', async () => {
@@ -101,6 +104,9 @@ describe('LocationResolver', () => {
         expect(result.native[LOCATION_VALIDATION_MESSAGE_FIELD]).to.equal(
             'No matching location was found for "Atlantis".',
         );
+        expect(result.native[LOCATION_VALIDATION_DISPLAY_TEXT_FIELD]).to.equal(
+            'No matching location was found for "Atlantis".',
+        );
     });
 
     it('rejects invalid manual timezones before the geocoding request is sent', async () => {
@@ -118,6 +124,9 @@ describe('LocationResolver', () => {
         expect(result.native[LOCATION_VALIDATED_KEY_FIELD]).to.equal('Berlin|DE');
         expect(result.native[LOCATION_VALIDATION_STATE_FIELD]).to.equal('error');
         expect(result.native[LOCATION_VALIDATION_MESSAGE_FIELD]).to.equal(
+            'The configured timezone "Mars/Base" is not valid.',
+        );
+        expect(result.native[LOCATION_VALIDATION_DISPLAY_TEXT_FIELD]).to.equal(
             'The configured timezone "Mars/Base" is not valid.',
         );
     });

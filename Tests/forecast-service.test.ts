@@ -41,8 +41,7 @@ describe('ForecastService', () => {
         timeZone: 'auto',
         tiltDeg: 0,
         azimuthDeg: 0,
-        arrayAreaM2: 10,
-        panelEfficiencyPct: 22,
+        peakPowerKwp: 2.2,
     };
 
     let clock: sinon.SinonFakeTimers;
@@ -80,6 +79,7 @@ describe('ForecastService', () => {
             energyKwh: 5.28,
         });
         expect(snapshot.todayEnergyKwh).to.equal(5.28);
+        expect(snapshot.todayRemainingEnergyKwh).to.equal(2.86);
         expect(snapshot.currentWeek.complete).to.equal(true);
         expect(snapshot.currentMonth.complete).to.equal(true);
         expect(snapshot.currentMonth.energyKwh).to.equal(163.68);

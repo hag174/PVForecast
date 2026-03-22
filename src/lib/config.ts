@@ -4,9 +4,14 @@ const DEFAULT_CITY = 'Berlin';
 const DEFAULT_TIME_ZONE = 'Europe/Berlin';
 const DEFAULT_TILT_DEG = 0;
 const DEFAULT_AZIMUTH_DEG = 0;
-const DEFAULT_ARRAY_AREA_M2 = 10;
-const DEFAULT_PANEL_EFFICIENCY_PCT = 22;
+const REQUIRED_CONFIG_MESSAGE_SUFFIX = 'Open the adapter settings and save the instance again.';
 
+/**
+ * Normalizes optional text inputs from the adapter config or admin UI.
+ *
+ * @param value - Raw value that may or may not be a string.
+ * @returns Trimmed text or an empty string.
+ */
 export function normalizeOptionalText(value: unknown): string {
     return typeof value === 'string' ? value.trim() : '';
 }
@@ -22,10 +27,35 @@ function toFiniteNumber(value: unknown, fieldName: string, fallback?: number): n
     throw new Error(`The configuration field "${fieldName}" must be a number.`);
 }
 
+function toRequiredFiniteNumber(value: unknown, fieldName: string): number {
+    if (value === undefined || value === null || (typeof value === 'string' && value.trim() === '')) {
+        throw new Error(`The configuration field "${fieldName}" is required. ${REQUIRED_CONFIG_MESSAGE_SUFFIX}`);
+    }
+
+    const numericValue = Number(value);
+    if (Number.isFinite(numericValue)) {
+        return numericValue;
+    }
+
+    throw new Error(`The configuration field "${fieldName}" must be a number.`);
+}
+
+/**
+ * Normalizes ISO-like country codes to uppercase.
+ *
+ * @param value - Raw user or config value.
+ * @returns Uppercased two-letter code or an empty string.
+ */
 export function normalizeCountryCode(value: unknown): string {
     return normalizeOptionalText(value).toUpperCase();
 }
 
+/**
+ * Checks whether an IANA time zone identifier can be used by the runtime.
+ *
+ * @param timeZone - Candidate time zone string.
+ * @returns True when the time zone is accepted by Intl.
+ */
 export function isValidTimeZone(timeZone: string): boolean {
     try {
         new Intl.DateTimeFormat('en-US', { timeZone }).format(new Date());
@@ -35,6 +65,13 @@ export function isValidTimeZone(timeZone: string): boolean {
     }
 }
 
+/**
+ * Builds a stable key for matching a validated city and country selection in the admin UI.
+ *
+ * @param city - Configured city.
+ * @param countryCode - Optional country code.
+ * @returns A normalized lookup key or an empty string if no city is set.
+ */
 export function buildLocationValidationKey(city: string, countryCode: string): string {
     const normalizedCity = normalizeOptionalText(city);
     if (!normalizedCity) {
@@ -63,18 +100,10 @@ export function resolveEffectiveConfig(config: ioBroker.AdapterConfig): Effectiv
 
     const tiltDeg = toFiniteNumber(config.tiltDeg, 'tiltDeg', DEFAULT_TILT_DEG);
     const azimuthDeg = toFiniteNumber(config.azimuthDeg, 'azimuthDeg', DEFAULT_AZIMUTH_DEG);
-    const arrayAreaM2 = toFiniteNumber(config.arrayAreaM2, 'arrayAreaM2', DEFAULT_ARRAY_AREA_M2);
-    const panelEfficiencyPct = toFiniteNumber(
-        config.panelEfficiencyPct,
-        'panelEfficiencyPct',
-        DEFAULT_PANEL_EFFICIENCY_PCT,
-    );
+    const peakPowerKwp = toRequiredFiniteNumber(config.peakPowerKwp, 'peakPowerKwp');
 
-    if (arrayAreaM2 <= 0) {
-        throw new Error('arrayAreaM2 must be greater than zero.');
-    }
-    if (panelEfficiencyPct <= 0 || panelEfficiencyPct > 100) {
-        throw new Error('panelEfficiencyPct must be greater than 0 and less than or equal to 100.');
+    if (peakPowerKwp <= 0) {
+        throw new Error('peakPowerKwp must be greater than zero.');
     }
     if (tiltDeg < 0 || tiltDeg > 90) {
         throw new Error('tiltDeg must be between 0 and 90 degrees.');
@@ -112,7 +141,6 @@ export function resolveEffectiveConfig(config: ioBroker.AdapterConfig): Effectiv
         timeZone: timezoneMode === 'manual' ? configuredTimeZone : 'auto',
         tiltDeg,
         azimuthDeg,
-        arrayAreaM2,
-        panelEfficiencyPct,
+        peakPowerKwp,
     };
 }

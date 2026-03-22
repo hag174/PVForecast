@@ -63,7 +63,9 @@ class ForecastService {
     if (allRows.length === 0) {
       throw new Error("The Open-Meteo response did not contain any hourly forecast values.");
     }
-    const today = (0, import_dates.formatLocalDate)(/* @__PURE__ */ new Date(), effectiveTimeZone);
+    const currentDate = /* @__PURE__ */ new Date();
+    const today = (0, import_dates.formatLocalDate)(currentDate, effectiveTimeZone);
+    const currentHour = (0, import_dates.formatLocalHour)(currentDate, effectiveTimeZone);
     const tomorrow = (0, import_dates.addDays)(today, 1);
     const weekRange = (0, import_dates.getIsoWeekRange)(today);
     const monthRange = (0, import_dates.getMonthRange)(today);
@@ -73,6 +75,7 @@ class ForecastService {
       hourly: allRows.filter((row) => row.localDate === today || row.localDate === tomorrow),
       daily,
       todayEnergyKwh: (_b = (_a = daily[0]) == null ? void 0 : _a.energyKwh) != null ? _b : 0,
+      todayRemainingEnergyKwh: this.sumRemainingTodayEnergy(allRows, today, currentHour),
       currentWeek: {
         energyKwh: this.sumEnergyForRange(allRows, weekRange.startDate, weekRange.endDate),
         complete: this.isRangeComplete(allRows, weekRange.startDate, weekRange.endDate)
@@ -91,7 +94,6 @@ class ForecastService {
     if (times.length === 0 || irradianceValues.length !== times.length || cloudCoverValues.length !== times.length) {
       throw new Error("The forecast payload is missing hourly GTI or cloud cover values.");
     }
-    const efficiencyFactor = config.panelEfficiencyPct / 100;
     return times.map((timestamp, index) => {
       if (typeof timestamp !== "string") {
         throw new Error("The forecast payload contains an invalid timestamp.");
@@ -102,7 +104,7 @@ class ForecastService {
         timestamp,
         localDate: timestamp.slice(0, 10),
         localTime: timestamp.slice(11, 16),
-        energyKwh: (0, import_dates.roundNumber)(gtiWm2 * config.arrayAreaM2 * efficiencyFactor / 1e3),
+        energyKwh: (0, import_dates.roundNumber)(gtiWm2 * config.peakPowerKwp / 1e3),
         cloudCoverPercent: (0, import_dates.roundNumber)(cloudCoverPercent, 1),
         gtiWm2: (0, import_dates.roundNumber)(gtiWm2, 2)
       };
@@ -125,6 +127,10 @@ class ForecastService {
   }
   sumEnergyForRange(rows, startDate, endDate) {
     const totalEnergy = rows.filter((row) => row.localDate >= startDate && row.localDate <= endDate).reduce((sum, row) => sum + row.energyKwh, 0);
+    return (0, import_dates.roundNumber)(totalEnergy);
+  }
+  sumRemainingTodayEnergy(rows, today, currentHour) {
+    const totalEnergy = rows.filter((row) => row.localDate === today && row.localTime >= currentHour).reduce((sum, row) => sum + row.energyKwh, 0);
     return (0, import_dates.roundNumber)(totalEnergy);
   }
   isRangeComplete(rows, startDate, endDate) {

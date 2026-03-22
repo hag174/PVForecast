@@ -116,21 +116,13 @@
             "en": "0 points south. Negative values rotate east, positive values rotate west.",
             "de": "0 zeigt nach Süden. Negative Werte drehen nach Osten, positive Werte nach Westen."
         },
-        "Array area in m²": {
-            "en": "Array area in m²",
-            "de": "Anlagenfläche in m²"
+        "Peak power in kWp": {
+            "en": "Peak power in kWp",
+            "de": "Peakleistung in kWp"
         },
-        "Total active panel area in square meters for the energy calculation.": {
-            "en": "Total active panel area in square meters for the energy calculation.",
-            "de": "Gesamte aktive Modulfläche in Quadratmetern für die Energieberechnung."
-        },
-        "Panel efficiency in percent": {
-            "en": "Panel efficiency in percent",
-            "de": "Moduleffizienz in Prozent"
-        },
-        "Conversion efficiency of the PV modules. Typical values are between 15 and 25 percent.": {
-            "en": "Conversion efficiency of the PV modules. Typical values are between 15 and 25 percent.",
-            "de": "Wirkungsgrad der PV-Module. Typische Werte liegen zwischen 15 und 25 Prozent."
+        "Installed PV peak power in kilowatt-peak used for the energy forecast.": {
+            "en": "Installed PV peak power in kilowatt-peak used for the energy forecast.",
+            "de": "Installierte PV-Peakleistung in Kilowatt-Peak, die fuer die Energieprognose verwendet wird."
         },
         "Validate the current city selection before saving while the instance is running.": {
             "en": "Validate the current city selection before saving while the instance is running.",
@@ -204,9 +196,10 @@
                     "countryCode",
                     "_validatedLocationKey",
                     "_locationValidationState",
-                    "_locationValidationMessage"
+                    "_locationValidationMessage",
+                    "_locationValidationDisplayText"
                 ],
-                "calculateFunc": "const city = (data.city || '').trim(); const country = (data.countryCode || '').trim().toUpperCase(); const current = city ? `${city}|${country}` : ''; const validated = data._validatedLocationKey || ''; if (!city) { return 'Enter a city and run the check.'; } if (data._locationValidationState === 'success' && validated === current) { return data._locationValidationMessage || 'Found.'; } if (data._locationValidationState === 'error' && validated === current) { return data._locationValidationMessage || 'Location could not be resolved.'; } if (_alive === false) { return 'Start the instance to validate the current city directly in the dialog.'; } return 'Not checked yet.';"
+                "calculateFunc": "const city = (data.city || '').trim(); const country = (data.countryCode || '').trim().toUpperCase(); const current = city ? `${city}|${country}` : ''; const validated = data._validatedLocationKey || ''; const displayText = data._locationValidationDisplayText || data._locationValidationMessage || ''; if (!city) { return 'Enter a city and run the check.'; } if ((data._locationValidationState === 'success' || data._locationValidationState === 'error') && validated === current) { return displayText || (data._locationValidationState === 'success' ? 'Found.' : 'Location could not be resolved.'); } if (_alive === false) { return 'Start the instance to validate the current city directly in the dialog.'; } return 'Not checked yet.';"
             }
         },
         "validateLocation": {
@@ -310,25 +303,11 @@
             "lg": 4,
             "xl": 4
         },
-        "arrayAreaM2": {
+        "peakPowerKwp": {
             "type": "number",
-            "label": "Array area in m²",
-            "help": "Total active panel area in square meters for the energy calculation.",
+            "label": "Peak power in kWp",
+            "help": "Installed PV peak power in kilowatt-peak used for the energy forecast.",
             "min": 0.1,
-            "step": 0.1,
-            "newLine": true,
-            "xs": 12,
-            "sm": 12,
-            "md": 6,
-            "lg": 4,
-            "xl": 4
-        },
-        "panelEfficiencyPct": {
-            "type": "number",
-            "label": "Panel efficiency in percent",
-            "help": "Conversion efficiency of the PV modules. Typical values are between 15 and 25 percent.",
-            "min": 0.1,
-            "max": 100,
             "step": 0.1,
             "newLine": true,
             "xs": 12,
@@ -350,6 +329,12 @@
             "default": ""
         },
         "_locationValidationMessage": {
+            "type": "text",
+            "hidden": true,
+            "readOnly": true,
+            "default": ""
+        },
+        "_locationValidationDisplayText": {
             "type": "text",
             "hidden": true,
             "readOnly": true,

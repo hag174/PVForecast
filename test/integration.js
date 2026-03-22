@@ -23,6 +23,19 @@ function formatLocalDate(date, timeZone = TIME_ZONE) {
     return `${values.year}-${values.month}-${values.day}`;
 }
 
+function formatLocalHour(date, timeZone = TIME_ZONE) {
+    const parts = new Intl.DateTimeFormat('en-GB', {
+        timeZone,
+        hour: '2-digit',
+        hourCycle: 'h23',
+    }).formatToParts(date);
+
+    const values = Object.fromEntries(
+        parts.filter((part) => part.type !== 'literal').map((part) => [part.type, part.value]),
+    );
+    return Number(values.hour);
+}
+
 function addDays(dateString, days) {
     const [year, month, day] = dateString.split('-').map(Number);
     const date = new Date(Date.UTC(year, month - 1, day));
@@ -164,8 +177,7 @@ async function configureAdapter(harness) {
             timezone: TIME_ZONE,
             tiltDeg: 0,
             azimuthDeg: 0,
-            arrayAreaM2: 10,
-            panelEfficiencyPct: 22,
+            peakPowerKwp: 2.2,
         },
     });
 }
@@ -187,16 +199,22 @@ tests.integration(path.join(__dirname, '..'), {
 
                 await configureAdapter(harness);
                 await seedStaleHourlyChannel(harness);
+                const now = new Date();
                 await harness.startAdapterAndWait(true, {
                     [FIXTURE_ENV]: fixturePath,
                 });
 
-                const today = formatLocalDate(new Date());
+                const today = formatLocalDate(now);
                 const tomorrow = addDays(today, 1);
+                const currentLocalHour = formatLocalHour(now);
+                const remainingTodayEnergy = Number(((24 - currentLocalHour) * 0.22).toFixed(3));
                 const firstHourKey = sanitizeStateKey(`${today}T00:00`);
                 const connectionState = await harness.states.getStateAsync(`${ADAPTER_NAMESPACE}.info.connection`);
                 const lastErrorState = await harness.states.getStateAsync(`${ADAPTER_NAMESPACE}.info.lastError`);
                 const todayEnergyState = await harness.states.getStateAsync(`${ADAPTER_NAMESPACE}.summary.today.energy_kwh`);
+                const remainingTodayEnergyState = await harness.states.getStateAsync(
+                    `${ADAPTER_NAMESPACE}.summary.today.remaining_energy_kwh`,
+                );
                 const resolvedNameState = await harness.states.getStateAsync(`${ADAPTER_NAMESPACE}.location.resolvedName`);
                 const timezoneState = await harness.states.getStateAsync(`${ADAPTER_NAMESPACE}.location.timezone`);
                 const day0DateState = await harness.states.getStateAsync(`${ADAPTER_NAMESPACE}.forecast.daily.day0.date`);
@@ -206,6 +224,7 @@ tests.integration(path.join(__dirname, '..'), {
                 );
                 const hourlyJsonState = await harness.states.getStateAsync(`${ADAPTER_NAMESPACE}.forecast.json.hourly`);
                 const dailyJsonState = await harness.states.getStateAsync(`${ADAPTER_NAMESPACE}.forecast.json.daily`);
+                const summaryJsonState = await harness.states.getStateAsync(`${ADAPTER_NAMESPACE}.forecast.json.summary`);
                 const lastUpdateObject = await harness.objects.getObjectAsync(`${ADAPTER_NAMESPACE}.info.lastUpdate`);
                 const staleChannel = await harness.objects.getObjectAsync(
                     `${ADAPTER_NAMESPACE}.forecast.hourly.timestamps.stale_fixture`,
@@ -214,6 +233,7 @@ tests.integration(path.join(__dirname, '..'), {
                 expect(connectionState?.val).to.equal(true);
                 expect(lastErrorState?.val).to.equal('');
                 expect(todayEnergyState?.val).to.equal(5.28);
+                expect(remainingTodayEnergyState?.val).to.equal(remainingTodayEnergy);
                 expect(resolvedNameState?.val).to.equal('Berlin, Germany');
                 expect(timezoneState?.val).to.equal(TIME_ZONE);
                 expect(day0DateState?.val).to.equal(today);
@@ -223,6 +243,7 @@ tests.integration(path.join(__dirname, '..'), {
 
                 const hourlyJson = JSON.parse(hourlyJsonState.val);
                 const dailyJson = JSON.parse(dailyJsonState.val);
+                const summaryJson = JSON.parse(summaryJsonState.val);
                 expect(hourlyJson).to.have.lengthOf(48);
                 expect(dailyJson[0]).to.deep.equal({
                     date: today,
@@ -232,6 +253,8 @@ tests.integration(path.join(__dirname, '..'), {
                     date: tomorrow,
                     energyKwh: 5.28,
                 });
+                expect(summaryJson.todayEnergyKwh).to.equal(5.28);
+                expect(summaryJson.todayRemainingEnergyKwh).to.equal(remainingTodayEnergy);
                 expect(staleChannel).to.equal(null);
             });
         });

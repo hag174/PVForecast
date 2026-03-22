@@ -20,8 +20,7 @@ function createAdapterConfig(): ioBroker.AdapterConfig {
         timezone: 'Europe/Berlin',
         tiltDeg: 35,
         azimuthDeg: -15,
-        arrayAreaM2: 10,
-        panelEfficiencyPct: 22,
+        peakPowerKwp: 2.2,
     } as ioBroker.AdapterConfig;
 }
 
@@ -61,6 +60,7 @@ function createSnapshot(hourly?: ForecastRow[]): ForecastSnapshot {
         ],
         daily: createDailyForecast(),
         todayEnergyKwh: 6.75,
+        todayRemainingEnergyKwh: 4.25,
         currentWeek: {
             energyKwh: 32.4,
             complete: true,
@@ -182,7 +182,16 @@ describe('AdapterRuntime', () => {
         expect(host.getState('info.lastError')?.val).to.equal('');
         expect(host.getState('info.lastUpdate')?.val).to.equal('2026-03-21T08:15:00.000Z');
         expect(host.getObject('info.lastUpdate')?.common.role).to.equal('value.datetime');
+        expect(host.getState('summary.today.remaining_energy_kwh')?.val).to.equal(snapshot.todayRemainingEnergyKwh);
         expect(host.getState('forecast.json.hourly')?.val).to.equal(JSON.stringify(snapshot.hourly));
+        expect(host.getState('forecast.json.summary')?.val).to.equal(
+            JSON.stringify({
+                todayEnergyKwh: snapshot.todayEnergyKwh,
+                todayRemainingEnergyKwh: snapshot.todayRemainingEnergyKwh,
+                currentWeek: snapshot.currentWeek,
+                currentMonth: snapshot.currentMonth,
+            }),
+        );
         expect(host.intervals).to.have.lengthOf(1);
         expect(host.intervals[0].ms).to.equal(HOURLY_REFRESH_INTERVAL_MS);
     });
