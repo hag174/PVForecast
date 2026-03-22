@@ -7,7 +7,7 @@
     "email": "no-reply@example.com"
   },
   "contributors": [],
-  "homepage": "https://github.com/hag174/SolarForecast",
+  "homepage": "https://github.com/hag174/ioBroker.solarforecast",
   "license": "MIT",
   "keywords": [
     "solar",
@@ -17,7 +17,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/hag174/SolarForecast.git"
+    "url": "https://github.com/hag174/ioBroker.solarforecast.git"
   },
   "engines": {
     "node": ">= 20"
@@ -91,7 +91,7 @@
     ]
   },
   "bugs": {
-    "url": "https://github.com/hag174/SolarForecast/issues"
+    "url": "https://github.com/hag174/ioBroker.solarforecast/issues"
   },
   "readmeFilename": "README.md"
 }

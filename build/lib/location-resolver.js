@@ -93,16 +93,18 @@ class LocationResolver {
     }
     try {
       const geocodingResult = await this.client.geocode(city, countryCode || void 0, signal);
+      const resolvedCountryCode = geocodingResult.countryCode || countryCode;
+      const successValidationKey = (0, import_config.buildLocationValidationKey)(city, resolvedCountryCode);
       const effectiveTimeZone = timezoneMode === "manual" ? timezone : geocodingResult.timeZone;
       const message = `Found: ${geocodingResult.resolvedName} (${formatCoordinate(geocodingResult.latitude)}, ${formatCoordinate(geocodingResult.longitude)}), time zone ${effectiveTimeZone}.`;
       return {
         native: {
           city,
-          countryCode: geocodingResult.countryCode || countryCode,
+          countryCode: resolvedCountryCode,
           latitude: geocodingResult.latitude,
           longitude: geocodingResult.longitude,
           ...timezoneMode === "auto" ? { timezone: geocodingResult.timeZone } : {},
-          [LOCATION_VALIDATED_KEY_FIELD]: validationKey,
+          [LOCATION_VALIDATED_KEY_FIELD]: successValidationKey,
           [LOCATION_VALIDATION_STATE_FIELD]: "success",
           [LOCATION_VALIDATION_MESSAGE_FIELD]: message
         },
