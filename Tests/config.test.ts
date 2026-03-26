@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { resolveEffectiveConfig } from '../src/lib/config';
 
 describe('resolveEffectiveConfig', () => {
-    it('uses the planned defaults for geocoding mode', () => {
+    it('normalizes the geocoding mode with the new peak power setting', () => {
         const config = resolveEffectiveConfig({
             locationMode: 'geocode',
             city: '',
@@ -14,8 +14,9 @@ describe('resolveEffectiveConfig', () => {
             timezone: '',
             tiltDeg: undefined as unknown as number,
             azimuthDeg: undefined as unknown as number,
-            arrayAreaM2: undefined as unknown as number,
-            panelEfficiencyPct: undefined as unknown as number,
+            peakPowerKwp: 2.2,
+            morningDampingPct: undefined as unknown as number,
+            afternoonDampingPct: undefined as unknown as number,
         } as ioBroker.AdapterConfig);
 
         expect(config.locationMode).to.equal('geocode');
@@ -27,8 +28,9 @@ describe('resolveEffectiveConfig', () => {
         expect(config.timeZone).to.equal('auto');
         expect(config.tiltDeg).to.equal(0);
         expect(config.azimuthDeg).to.equal(0);
-        expect(config.arrayAreaM2).to.equal(10);
-        expect(config.panelEfficiencyPct).to.equal(22);
+        expect(config.peakPowerKwp).to.equal(2.2);
+        expect(config.morningDampingPct).to.equal(100);
+        expect(config.afternoonDampingPct).to.equal(100);
     });
 
     it('validates the manual coordinate mode', () => {
@@ -42,8 +44,9 @@ describe('resolveEffectiveConfig', () => {
             timezone: 'Europe/Berlin',
             tiltDeg: 35,
             azimuthDeg: -15,
-            arrayAreaM2: 29.3,
-            panelEfficiencyPct: 22.3,
+            peakPowerKwp: 9.8,
+            morningDampingPct: 85,
+            afternoonDampingPct: 70,
         } as ioBroker.AdapterConfig);
 
         expect(config.locationMode).to.equal('manual');
@@ -53,11 +56,31 @@ describe('resolveEffectiveConfig', () => {
         expect(config.timeZone).to.equal('Europe/Berlin');
         expect(config.tiltDeg).to.equal(35);
         expect(config.azimuthDeg).to.equal(-15);
-        expect(config.arrayAreaM2).to.equal(29.3);
-        expect(config.panelEfficiencyPct).to.equal(22.3);
+        expect(config.peakPowerKwp).to.equal(9.8);
+        expect(config.morningDampingPct).to.equal(85);
+        expect(config.afternoonDampingPct).to.equal(70);
     });
 
-    it('rejects invalid coordinates and timezones', () => {
+    it('rejects missing legacy-to-new peak power migrations', () => {
+        expect(() =>
+            resolveEffectiveConfig({
+                locationMode: 'geocode',
+                city: 'Berlin',
+                countryCode: 'DE',
+                latitude: 0,
+                longitude: 0,
+                timezoneMode: 'auto',
+                timezone: '',
+                tiltDeg: 0,
+                azimuthDeg: 0,
+                peakPowerKwp: undefined as unknown as number,
+                morningDampingPct: 100,
+                afternoonDampingPct: 100,
+            } as ioBroker.AdapterConfig),
+        ).to.throw('peakPowerKwp');
+    });
+
+    it('rejects invalid coordinates, timezones and peak power values', () => {
         expect(() =>
             resolveEffectiveConfig({
                 locationMode: 'manual',
@@ -69,8 +92,9 @@ describe('resolveEffectiveConfig', () => {
                 timezone: '',
                 tiltDeg: 0,
                 azimuthDeg: 0,
-                arrayAreaM2: 10,
-                panelEfficiencyPct: 22,
+                peakPowerKwp: 2.2,
+                morningDampingPct: 100,
+                afternoonDampingPct: 100,
             } as ioBroker.AdapterConfig),
         ).to.throw('latitude');
 
@@ -85,9 +109,61 @@ describe('resolveEffectiveConfig', () => {
                 timezone: 'Mars/Base',
                 tiltDeg: 0,
                 azimuthDeg: 0,
-                arrayAreaM2: 10,
-                panelEfficiencyPct: 22,
+                peakPowerKwp: 2.2,
+                morningDampingPct: 100,
+                afternoonDampingPct: 100,
             } as ioBroker.AdapterConfig),
         ).to.throw('timezone');
+
+        expect(() =>
+            resolveEffectiveConfig({
+                locationMode: 'geocode',
+                city: 'Berlin',
+                countryCode: '',
+                latitude: 0,
+                longitude: 0,
+                timezoneMode: 'auto',
+                timezone: '',
+                tiltDeg: 0,
+                azimuthDeg: 0,
+                peakPowerKwp: 0,
+                morningDampingPct: 100,
+                afternoonDampingPct: 100,
+            } as ioBroker.AdapterConfig),
+        ).to.throw('peakPowerKwp');
+
+        expect(() =>
+            resolveEffectiveConfig({
+                locationMode: 'geocode',
+                city: 'Berlin',
+                countryCode: '',
+                latitude: 0,
+                longitude: 0,
+                timezoneMode: 'auto',
+                timezone: '',
+                tiltDeg: 0,
+                azimuthDeg: 0,
+                peakPowerKwp: 2.2,
+                morningDampingPct: 101,
+                afternoonDampingPct: 100,
+            } as ioBroker.AdapterConfig),
+        ).to.throw('morningDampingPct');
+
+        expect(() =>
+            resolveEffectiveConfig({
+                locationMode: 'geocode',
+                city: 'Berlin',
+                countryCode: '',
+                latitude: 0,
+                longitude: 0,
+                timezoneMode: 'auto',
+                timezone: '',
+                tiltDeg: 0,
+                azimuthDeg: 0,
+                peakPowerKwp: 2.2,
+                morningDampingPct: 100,
+                afternoonDampingPct: -1,
+            } as ioBroker.AdapterConfig),
+        ).to.throw('afternoonDampingPct');
     });
 });

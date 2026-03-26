@@ -13,8 +13,9 @@ declare global {
             timezone: string;
             tiltDeg: number;
             azimuthDeg: number;
-            arrayAreaM2: number;
-            panelEfficiencyPct: number;
+            peakPowerKwp: number;
+            morningDampingPct: number;
+            afternoonDampingPct: number;
         }
     }
 }

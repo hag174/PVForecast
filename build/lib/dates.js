@@ -22,6 +22,7 @@ __export(dates_exports, {
   boundaryTimestamp: () => boundaryTimestamp,
   createHourlyStateKeys: () => createHourlyStateKeys,
   formatLocalDate: () => formatLocalDate,
+  formatLocalHour: () => formatLocalHour,
   getIsoWeekRange: () => getIsoWeekRange,
   getMonthRange: () => getMonthRange,
   roundNumber: () => roundNumber,
@@ -46,6 +47,17 @@ function formatLocalDate(date, timeZone) {
     parts.filter((part) => part.type !== "literal").map((part) => [part.type, part.value])
   );
   return `${values.year}-${values.month}-${values.day}`;
+}
+function formatLocalHour(date, timeZone) {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone,
+    hour: "2-digit",
+    hourCycle: "h23"
+  }).formatToParts(date);
+  const values = Object.fromEntries(
+    parts.filter((part) => part.type !== "literal").map((part) => [part.type, part.value])
+  );
+  return `${values.hour}:00`;
 }
 function addDays(dateString, days) {
   const date = parseDate(dateString);
@@ -101,6 +113,7 @@ function roundNumber(value, fractionDigits = 3) {
   boundaryTimestamp,
   createHourlyStateKeys,
   formatLocalDate,
+  formatLocalHour,
   getIsoWeekRange,
   getMonthRange,
   roundNumber,

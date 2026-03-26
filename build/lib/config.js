@@ -29,18 +29,35 @@ const DEFAULT_CITY = "Berlin";
 const DEFAULT_TIME_ZONE = "Europe/Berlin";
 const DEFAULT_TILT_DEG = 0;
 const DEFAULT_AZIMUTH_DEG = 0;
-const DEFAULT_ARRAY_AREA_M2 = 10;
-const DEFAULT_PANEL_EFFICIENCY_PCT = 22;
+const DEFAULT_MORNING_DAMPING_PCT = 100;
+const DEFAULT_AFTERNOON_DAMPING_PCT = 100;
+const REQUIRED_CONFIG_MESSAGE_SUFFIX = "Open the adapter settings and save the instance again.";
 function normalizeOptionalText(value) {
   return typeof value === "string" ? value.trim() : "";
 }
 function toFiniteNumber(value, fieldName, fallback) {
+  if (typeof value === "string" && value.trim() === "") {
+    if (fallback !== void 0) {
+      return fallback;
+    }
+    throw new Error(`The configuration field "${fieldName}" must be a number.`);
+  }
   const numericValue = Number(value);
   if (Number.isFinite(numericValue)) {
     return numericValue;
   }
   if (fallback !== void 0) {
     return fallback;
+  }
+  throw new Error(`The configuration field "${fieldName}" must be a number.`);
+}
+function toRequiredFiniteNumber(value, fieldName) {
+  if (value === void 0 || value === null || typeof value === "string" && value.trim() === "") {
+    throw new Error(`The configuration field "${fieldName}" is required. ${REQUIRED_CONFIG_MESSAGE_SUFFIX}`);
+  }
+  const numericValue = Number(value);
+  if (Number.isFinite(numericValue)) {
+    return numericValue;
   }
   throw new Error(`The configuration field "${fieldName}" must be a number.`);
 }
@@ -72,17 +89,25 @@ function resolveEffectiveConfig(config) {
   }
   const tiltDeg = toFiniteNumber(config.tiltDeg, "tiltDeg", DEFAULT_TILT_DEG);
   const azimuthDeg = toFiniteNumber(config.azimuthDeg, "azimuthDeg", DEFAULT_AZIMUTH_DEG);
-  const arrayAreaM2 = toFiniteNumber(config.arrayAreaM2, "arrayAreaM2", DEFAULT_ARRAY_AREA_M2);
-  const panelEfficiencyPct = toFiniteNumber(
-    config.panelEfficiencyPct,
-    "panelEfficiencyPct",
-    DEFAULT_PANEL_EFFICIENCY_PCT
+  const peakPowerKwp = toRequiredFiniteNumber(config.peakPowerKwp, "peakPowerKwp");
+  const morningDampingPct = toFiniteNumber(
+    config.morningDampingPct,
+    "morningDampingPct",
+    DEFAULT_MORNING_DAMPING_PCT
   );
-  if (arrayAreaM2 <= 0) {
-    throw new Error("arrayAreaM2 must be greater than zero.");
+  const afternoonDampingPct = toFiniteNumber(
+    config.afternoonDampingPct,
+    "afternoonDampingPct",
+    DEFAULT_AFTERNOON_DAMPING_PCT
+  );
+  if (peakPowerKwp <= 0) {
+    throw new Error("peakPowerKwp must be greater than zero.");
   }
-  if (panelEfficiencyPct <= 0 || panelEfficiencyPct > 100) {
-    throw new Error("panelEfficiencyPct must be greater than 0 and less than or equal to 100.");
+  if (morningDampingPct < 0 || morningDampingPct > 100) {
+    throw new Error("morningDampingPct must be between 0 and 100 percent.");
+  }
+  if (afternoonDampingPct < 0 || afternoonDampingPct > 100) {
+    throw new Error("afternoonDampingPct must be between 0 and 100 percent.");
   }
   if (tiltDeg < 0 || tiltDeg > 90) {
     throw new Error("tiltDeg must be between 0 and 90 degrees.");
@@ -116,8 +141,9 @@ function resolveEffectiveConfig(config) {
     timeZone: timezoneMode === "manual" ? configuredTimeZone : "auto",
     tiltDeg,
     azimuthDeg,
-    arrayAreaM2,
-    panelEfficiencyPct
+    peakPowerKwp,
+    morningDampingPct,
+    afternoonDampingPct
   };
 }
 // Annotate the CommonJS export names for ESM import in node:

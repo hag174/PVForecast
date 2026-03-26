@@ -29,6 +29,26 @@ export function formatLocalDate(date: Date, timeZone: string): string {
 }
 
 /**
+ * Formats the local hour of a date inside the requested timezone.
+ *
+ * @param date - Date instance to format.
+ * @param timeZone - IANA timezone identifier used for the local hour.
+ * @returns The local hour in HH:00 format.
+ */
+export function formatLocalHour(date: Date, timeZone: string): string {
+    const parts = new Intl.DateTimeFormat('en-GB', {
+        timeZone,
+        hour: '2-digit',
+        hourCycle: 'h23',
+    }).formatToParts(date);
+
+    const values = Object.fromEntries(
+        parts.filter(part => part.type !== 'literal').map(part => [part.type, part.value]),
+    );
+    return `${values.hour}:00`;
+}
+
+/**
  * Adds a number of days to a calendar date without relying on the host timezone.
  *
  * @param dateString - The source date in YYYY-MM-DD format.

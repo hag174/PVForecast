@@ -41,8 +41,9 @@ describe('ForecastService', () => {
         timeZone: 'auto',
         tiltDeg: 0,
         azimuthDeg: 0,
-        arrayAreaM2: 10,
-        panelEfficiencyPct: 22,
+        peakPowerKwp: 2.2,
+        morningDampingPct: 100,
+        afternoonDampingPct: 100,
     };
 
     let clock: sinon.SinonFakeTimers;
@@ -80,11 +81,50 @@ describe('ForecastService', () => {
             energyKwh: 5.28,
         });
         expect(snapshot.todayEnergyKwh).to.equal(5.28);
+        expect(snapshot.todayRemainingEnergyKwh).to.equal(2.86);
         expect(snapshot.currentWeek.complete).to.equal(true);
         expect(snapshot.currentMonth.complete).to.equal(true);
         expect(snapshot.currentMonth.energyKwh).to.equal(163.68);
         expect(geocodeStub.calledOnce).to.equal(true);
         expect(forecastStub.calledOnce).to.equal(true);
+    });
+
+    it('applies different morning and afternoon damping factors to hourly and aggregated energy', async () => {
+        const geocodeStub = sinon.stub().resolves({
+            resolvedName: 'Berlin, Germany',
+            countryCode: 'DE',
+            latitude: 52.52,
+            longitude: 13.405,
+            timeZone: 'Europe/Berlin',
+        });
+        const forecastStub = sinon.stub().resolves(createHourlyResponse('2026-03-20', '2026-03-20'));
+
+        const service = new ForecastService({
+            geocode: geocodeStub,
+            fetchForecast: forecastStub,
+        });
+
+        const snapshot = await service.fetchSnapshot({
+            ...baseConfig,
+            morningDampingPct: 50,
+            afternoonDampingPct: 25,
+        });
+
+        expect(snapshot.hourly).to.have.lengthOf(24);
+        expect(snapshot.hourly[11]).to.include({
+            localTime: '11:00',
+            energyKwh: 0.11,
+        });
+        expect(snapshot.hourly[12]).to.include({
+            localTime: '12:00',
+            energyKwh: 0.055,
+        });
+        expect(snapshot.daily[0]).to.deep.equal({
+            date: '2026-03-20',
+            energyKwh: 1.98,
+        });
+        expect(snapshot.todayEnergyKwh).to.equal(1.98);
+        expect(snapshot.todayRemainingEnergyKwh).to.equal(0.77);
     });
 
     it('marks the current month as partial when the response does not cover the full range', async () => {

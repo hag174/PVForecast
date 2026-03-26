@@ -19,6 +19,7 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 var location_resolver_exports = {};
 __export(location_resolver_exports, {
   LOCATION_VALIDATED_KEY_FIELD: () => LOCATION_VALIDATED_KEY_FIELD,
+  LOCATION_VALIDATION_DISPLAY_TEXT_FIELD: () => LOCATION_VALIDATION_DISPLAY_TEXT_FIELD,
   LOCATION_VALIDATION_MESSAGE_FIELD: () => LOCATION_VALIDATION_MESSAGE_FIELD,
   LOCATION_VALIDATION_STATE_FIELD: () => LOCATION_VALIDATION_STATE_FIELD,
   LocationResolver: () => LocationResolver,
@@ -31,6 +32,7 @@ const RESOLVE_LOCATION_CONFIG_COMMAND = "resolveLocationConfig";
 const LOCATION_VALIDATED_KEY_FIELD = "_validatedLocationKey";
 const LOCATION_VALIDATION_MESSAGE_FIELD = "_locationValidationMessage";
 const LOCATION_VALIDATION_STATE_FIELD = "_locationValidationState";
+const LOCATION_VALIDATION_DISPLAY_TEXT_FIELD = "_locationValidationDisplayText";
 function formatCoordinate(value) {
   return value.toFixed(4);
 }
@@ -38,9 +40,21 @@ function toErrorMessage(error) {
   return error instanceof Error ? error.message : String(error);
 }
 class LocationResolver {
+  /**
+   * Creates a resolver backed by the Open-Meteo geocoding client.
+   *
+   * @param client - Geocoding client abstraction used in production and tests.
+   */
   constructor(client = new import_open_meteo_client.OpenMeteoClient()) {
     this.client = client;
   }
+  /**
+   * Resolves the effective runtime location from either manual coordinates or geocoding.
+   *
+   * @param config - Normalized location-related adapter configuration.
+   * @param signal - Abort signal for the geocoding request.
+   * @returns The effective location context used by the forecast runtime.
+   */
   async resolveLocation(config, signal) {
     var _a, _b, _c, _d, _e, _f;
     if (config.locationMode === "manual") {
@@ -61,6 +75,13 @@ class LocationResolver {
       timeZone: config.timezoneMode === "manual" ? config.timeZone : geocodingResult.timeZone
     };
   }
+  /**
+   * Validates a geocoded city selection from the admin dialog and returns native field updates.
+   *
+   * @param request - Raw admin-side validation request payload.
+   * @param signal - Abort signal for the geocoding request.
+   * @returns A jsonConfig-compatible response containing status text and native updates.
+   */
   async validateGeocodeLocation(request, signal) {
     const city = (0, import_config.normalizeOptionalText)(request.city);
     const countryCode = (0, import_config.normalizeCountryCode)(request.countryCode);
@@ -106,7 +127,8 @@ class LocationResolver {
           ...timezoneMode === "auto" ? { timezone: geocodingResult.timeZone } : {},
           [LOCATION_VALIDATED_KEY_FIELD]: successValidationKey,
           [LOCATION_VALIDATION_STATE_FIELD]: "success",
-          [LOCATION_VALIDATION_MESSAGE_FIELD]: message
+          [LOCATION_VALIDATION_MESSAGE_FIELD]: message,
+          [LOCATION_VALIDATION_DISPLAY_TEXT_FIELD]: message
         },
         text: message,
         icon: "connection",
@@ -123,7 +145,8 @@ class LocationResolver {
         countryCode,
         [LOCATION_VALIDATED_KEY_FIELD]: validationKey,
         [LOCATION_VALIDATION_STATE_FIELD]: "error",
-        [LOCATION_VALIDATION_MESSAGE_FIELD]: message
+        [LOCATION_VALIDATION_MESSAGE_FIELD]: message,
+        [LOCATION_VALIDATION_DISPLAY_TEXT_FIELD]: message
       },
       text: message,
       icon: "no-connection",
@@ -134,6 +157,7 @@ class LocationResolver {
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   LOCATION_VALIDATED_KEY_FIELD,
+  LOCATION_VALIDATION_DISPLAY_TEXT_FIELD,
   LOCATION_VALIDATION_MESSAGE_FIELD,
   LOCATION_VALIDATION_STATE_FIELD,
   LocationResolver,

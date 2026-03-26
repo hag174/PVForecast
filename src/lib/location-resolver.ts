@@ -12,6 +12,7 @@ export const RESOLVE_LOCATION_CONFIG_COMMAND = 'resolveLocationConfig';
 export const LOCATION_VALIDATED_KEY_FIELD = '_validatedLocationKey';
 export const LOCATION_VALIDATION_MESSAGE_FIELD = '_locationValidationMessage';
 export const LOCATION_VALIDATION_STATE_FIELD = '_locationValidationState';
+export const LOCATION_VALIDATION_DISPLAY_TEXT_FIELD = '_locationValidationDisplayText';
 
 function formatCoordinate(value: number): string {
     return value.toFixed(4);
@@ -25,8 +26,20 @@ function toErrorMessage(error: unknown): string {
  * Resolves configured locations for the forecast runtime and for admin-side validation.
  */
 export class LocationResolver {
+    /**
+     * Creates a resolver backed by the Open-Meteo geocoding client.
+     *
+     * @param client - Geocoding client abstraction used in production and tests.
+     */
     public constructor(private readonly client: Pick<OpenMeteoClient, 'geocode'> = new OpenMeteoClient()) {}
 
+    /**
+     * Resolves the effective runtime location from either manual coordinates or geocoding.
+     *
+     * @param config - Normalized location-related adapter configuration.
+     * @param signal - Abort signal for the geocoding request.
+     * @returns The effective location context used by the forecast runtime.
+     */
     public async resolveLocation(config: LocationResolutionConfig, signal?: AbortSignal): Promise<LocationContext> {
         if (config.locationMode === 'manual') {
             return {
@@ -50,6 +63,13 @@ export class LocationResolver {
         };
     }
 
+    /**
+     * Validates a geocoded city selection from the admin dialog and returns native field updates.
+     *
+     * @param request - Raw admin-side validation request payload.
+     * @param signal - Abort signal for the geocoding request.
+     * @returns A jsonConfig-compatible response containing status text and native updates.
+     */
     public async validateGeocodeLocation(
         request: AdminLocationValidationRequest,
         signal?: AbortSignal,
@@ -105,6 +125,7 @@ export class LocationResolver {
                     [LOCATION_VALIDATED_KEY_FIELD]: successValidationKey,
                     [LOCATION_VALIDATION_STATE_FIELD]: 'success',
                     [LOCATION_VALIDATION_MESSAGE_FIELD]: message,
+                    [LOCATION_VALIDATION_DISPLAY_TEXT_FIELD]: message,
                 },
                 text: message,
                 icon: 'connection',
@@ -128,6 +149,7 @@ export class LocationResolver {
                 [LOCATION_VALIDATED_KEY_FIELD]: validationKey,
                 [LOCATION_VALIDATION_STATE_FIELD]: 'error',
                 [LOCATION_VALIDATION_MESSAGE_FIELD]: message,
+                [LOCATION_VALIDATION_DISPLAY_TEXT_FIELD]: message,
             },
             text: message,
             icon: 'no-connection',

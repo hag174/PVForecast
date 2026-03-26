@@ -13,8 +13,9 @@ export interface EffectiveConfig {
     timeZone: string;
     tiltDeg: number;
     azimuthDeg: number;
-    arrayAreaM2: number;
-    panelEfficiencyPct: number;
+    peakPowerKwp: number;
+    morningDampingPct: number;
+    afternoonDampingPct: number;
 }
 
 export interface LocationResolutionConfig {
@@ -67,6 +68,7 @@ export interface ForecastSnapshot {
     hourly: ForecastRow[];
     daily: DailyForecast[];
     todayEnergyKwh: number;
+    todayRemainingEnergyKwh: number;
     currentWeek: PeriodSummary;
     currentMonth: PeriodSummary;
 }
