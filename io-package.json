@@ -1,8 +1,21 @@
 {
     "common": {
         "name": "solarforecast",
-        "version": "0.5.0",
+        "version": "0.5.5",
         "news": {
+            "0.5.5": {
+                "en": "Maintenance release with version bump.",
+                "de": "Wartungsrelease mit Versionsanhebung.",
+                "ru": "Maintenance release with version bump.",
+                "pt": "Maintenance release with version bump.",
+                "nl": "Maintenance release with version bump.",
+                "fr": "Maintenance release with version bump.",
+                "it": "Maintenance release with version bump.",
+                "es": "Maintenance release with version bump.",
+                "pl": "Maintenance release with version bump.",
+                "uk": "Maintenance release with version bump.",
+                "zh-cn": "Maintenance release with version bump."
+            },
             "0.5.0": {
                 "en": "Replaced panel area and efficiency with peak power, fixed the city validation status display, added a remaining-today energy summary, and introduced morning/afternoon damping factors.",
                 "de": "Anlagenflaeche und Effizienz durch Peakleistung ersetzt, Anzeige der Stadtpruefung korrigiert, Rest-des-Tages-Energiesumme hinzugefuegt und Daempfungsfaktoren fuer Vor- und Nachmittag eingefuehrt.",
