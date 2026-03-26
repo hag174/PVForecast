@@ -1,8 +1,21 @@
 {
     "common": {
         "name": "solarforecast",
-        "version": "0.5.5",
+        "version": "0.5.6",
         "news": {
+            "0.5.6": {
+                "en": "Maintenance release with version bump.",
+                "de": "Wartungsrelease mit Versionsanhebung.",
+                "ru": "Maintenance release with version bump.",
+                "pt": "Maintenance release with version bump.",
+                "nl": "Maintenance release with version bump.",
+                "fr": "Maintenance release with version bump.",
+                "it": "Maintenance release with version bump.",
+                "es": "Maintenance release with version bump.",
+                "pl": "Maintenance release with version bump.",
+                "uk": "Maintenance release with version bump.",
+                "zh-cn": "Maintenance release with version bump."
+            },
             "0.5.5": {
                 "en": "Maintenance release with version bump.",
                 "de": "Wartungsrelease mit Versionsanhebung.",
