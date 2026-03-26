@@ -28,7 +28,7 @@ tags:
 - Resolve location via Open-Meteo geocoding when geocode mode is used.
 - Query Open-Meteo forecast data using `global_tilted_irradiance` and `cloud_cover`.
 - Compute hourly PV energy in kWh from GTI, configured peak power, and time-of-day damping.
-- Expose hourly values for today and tomorrow as states and as Material Design JSON Chart payloads under `forecast.json.hourly`.
+- Expose hourly values for today and tomorrow as states and as separate Material Design JSON Chart payloads under `forecast.json.hourlyToday` and `forecast.json.hourlyTomorrow`.
 - Expose daily totals for today plus the next 6 days and as Material Design JSON Chart payloads under `forecast.json.daily`.
 - Expose current calendar week and current calendar month totals.
 - Mark week and month totals with completeness flags when the API does not cover the full range.

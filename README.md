@@ -58,14 +58,15 @@ Each Open-Meteo refresh uses a 30 second request timeout and skips overlapping s
 - `forecast.daily.day0..day6.date`
 - `forecast.daily.day0..day6.energy_kwh`
 - `forecast.hourly.timestamps.<key>.*`
-- `forecast.json.hourly`
+- `forecast.json.hourlyToday`
+- `forecast.json.hourlyTomorrow`
 - `forecast.json.daily`
 - `forecast.json.summary`
 
 The hourly `<key>` is derived from the local timestamp and gains a deterministic suffix when the same local hour occurs twice during the DST fallback change.
 All `*.energy_kwh` states use the ioBroker role `value.power.consumption`.
-`forecast.json.hourly` and `forecast.json.daily` now contain `axisLabels` plus `graphs` payloads for the vis-materialdesign JSON Chart widget.
-This replaces the previous raw-array JSON format and is a breaking change for scripts that consumed those states directly.
+`forecast.json.hourlyToday`, `forecast.json.hourlyTomorrow`, and `forecast.json.daily` now contain `axisLabels` plus `graphs` payloads for the vis-materialdesign JSON Chart widget.
+This replaces the previous combined `forecast.json.hourly` state and the earlier raw-array JSON format.
 
 ## Development
 
@@ -94,7 +95,8 @@ Project-specific unit tests live in `Tests/`. Template package and integration t
 
 ### 0.6.0
 
-- breaking change: changed `forecast.json.hourly` and `forecast.json.daily` to vis-materialdesign JSON Chart payloads
+- breaking change: split the combined `forecast.json.hourly` state into `forecast.json.hourlyToday` and `forecast.json.hourlyTomorrow`
+- changed the hourly and daily JSON mirrors to vis-materialdesign JSON Chart payloads
 - kept `forecast.json.summary` and the existing single forecast states unchanged
 - added direct adapter tests for the new chart formatter and runtime wiring
 

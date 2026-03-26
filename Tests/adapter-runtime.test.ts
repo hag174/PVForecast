@@ -60,6 +60,14 @@ function createSnapshot(hourly?: ForecastRow[]): ForecastSnapshot {
                 cloudCoverPercent: 18,
                 gtiWm2: 430,
             },
+            {
+                timestamp: '2026-03-22T10:00',
+                localDate: '2026-03-22',
+                localTime: '10:00',
+                energyKwh: 2.1,
+                cloudCoverPercent: 12,
+                gtiWm2: 520,
+            },
         ],
         daily: createDailyForecast(),
         todayEnergyKwh: 6.75,
@@ -169,6 +177,7 @@ describe('AdapterRuntime', () => {
 
     it('initializes static objects, writes snapshot states and schedules hourly refreshes', async () => {
         const host = new TestHost();
+        host.seedObject('forecast.json.hourly');
         const snapshot = createSnapshot();
         const fetchSnapshot = sinon.stub().resolves(snapshot);
         const runtime = new AdapterRuntime(host, {
@@ -193,9 +202,19 @@ describe('AdapterRuntime', () => {
         expect(host.getObject('forecast.hourly.timestamps.2026_03_21T10_00.energy_kwh')?.common.role).to.equal(
             'value.power.consumption',
         );
+        expect(host.hasObject('forecast.json.hourlyToday')).to.equal(true);
+        expect(host.hasObject('forecast.json.hourlyTomorrow')).to.equal(true);
+        expect(host.deletedIds).to.include('forecast.json.hourly');
         expect(host.getState('summary.today.remaining_energy_kwh')?.val).to.equal(snapshot.todayRemainingEnergyKwh);
-        expect(host.getState('forecast.json.hourly')?.val).to.equal(
-            JSON.stringify(formatHourlyMaterialDesignChart(snapshot.hourly)),
+        expect(host.getState('forecast.json.hourlyToday')?.val).to.equal(
+            JSON.stringify(
+                formatHourlyMaterialDesignChart(snapshot.hourly.filter(row => row.localDate === '2026-03-21')),
+            ),
+        );
+        expect(host.getState('forecast.json.hourlyTomorrow')?.val).to.equal(
+            JSON.stringify(
+                formatHourlyMaterialDesignChart(snapshot.hourly.filter(row => row.localDate === '2026-03-22')),
+            ),
         );
         expect(host.getState('forecast.json.daily')?.val).to.equal(
             JSON.stringify(formatDailyMaterialDesignChart(snapshot.daily)),
@@ -225,12 +244,14 @@ describe('AdapterRuntime', () => {
         });
 
         await runtime.onReady();
-        const previousHourlyJson = host.getState('forecast.json.hourly')?.val;
+        const previousHourlyTodayJson = host.getState('forecast.json.hourlyToday')?.val;
+        const previousHourlyTomorrowJson = host.getState('forecast.json.hourlyTomorrow')?.val;
         const previousDailyJson = host.getState('forecast.json.daily')?.val;
 
         await runtime.refreshForecast();
 
-        expect(host.getState('forecast.json.hourly')?.val).to.equal(previousHourlyJson);
+        expect(host.getState('forecast.json.hourlyToday')?.val).to.equal(previousHourlyTodayJson);
+        expect(host.getState('forecast.json.hourlyTomorrow')?.val).to.equal(previousHourlyTomorrowJson);
         expect(host.getState('forecast.json.daily')?.val).to.equal(previousDailyJson);
         expect(host.getState('info.connection')?.val).to.equal(false);
         expect(host.getState('info.lastError')?.val).to.equal('boom');

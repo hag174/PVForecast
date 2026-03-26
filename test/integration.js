@@ -159,7 +159,12 @@ tests.integration(path.join(__dirname, '..'), {
                 const hourlyTimestampState = await harness.states.getStateAsync(
                     `${ADAPTER_NAMESPACE}.forecast.hourly.timestamps.${firstHourKey}.timestamp`,
                 );
-                const hourlyJsonState = await harness.states.getStateAsync(`${ADAPTER_NAMESPACE}.forecast.json.hourly`);
+                const hourlyTodayJsonState = await harness.states.getStateAsync(
+                    `${ADAPTER_NAMESPACE}.forecast.json.hourlyToday`,
+                );
+                const hourlyTomorrowJsonState = await harness.states.getStateAsync(
+                    `${ADAPTER_NAMESPACE}.forecast.json.hourlyTomorrow`,
+                );
                 const dailyJsonState = await harness.states.getStateAsync(`${ADAPTER_NAMESPACE}.forecast.json.daily`);
                 const summaryJsonState = await harness.states.getStateAsync(`${ADAPTER_NAMESPACE}.forecast.json.summary`);
                 const lastUpdateObject = await harness.objects.getObjectAsync(`${ADAPTER_NAMESPACE}.info.lastUpdate`);
@@ -182,13 +187,17 @@ tests.integration(path.join(__dirname, '..'), {
                 expect(lastUpdateObject?.common.role).to.equal('value.datetime');
                 expect(todayEnergyObject?.common.role).to.equal('value.power.consumption');
 
-                const hourlyJson = JSON.parse(hourlyJsonState.val);
+                const hourlyTodayJson = JSON.parse(hourlyTodayJsonState.val);
+                const hourlyTomorrowJson = JSON.parse(hourlyTomorrowJsonState.val);
                 const dailyJson = JSON.parse(dailyJsonState.val);
                 const summaryJson = JSON.parse(summaryJsonState.val);
-                expect(hourlyJson.axisLabels).to.have.lengthOf(48);
-                expect(hourlyJson.axisLabels[0]).to.equal(`${formatChartDateLabel(today)}\n00:00`);
-                expect(hourlyJson.graphs).to.have.lengthOf(1);
-                expect(hourlyJson.graphs[0]).to.include({
+                expect(hourlyTodayJson.axisLabels).to.have.lengthOf(24);
+                expect(hourlyTodayJson.axisLabels[0]).to.equal(`${formatChartDateLabel(today)}\n00:00`);
+                expect(hourlyTomorrowJson.axisLabels).to.have.lengthOf(24);
+                expect(hourlyTomorrowJson.axisLabels[0]).to.equal(`${formatChartDateLabel(tomorrow)}\n00:00`);
+                expect(hourlyTodayJson.graphs).to.have.lengthOf(1);
+                expect(hourlyTomorrowJson.graphs).to.have.lengthOf(1);
+                expect(hourlyTodayJson.graphs[0]).to.include({
                     type: 'bar',
                     color: '#f9a825',
                     legendText: 'Energy forecast',
@@ -197,8 +206,19 @@ tests.integration(path.join(__dirname, '..'), {
                     yAxis_min: 0,
                     datalabel_show: false,
                 });
-                expect(hourlyJson.graphs[0].data).to.have.lengthOf(48);
-                expect(hourlyJson.graphs[0].data[0]).to.equal(0.22);
+                expect(hourlyTomorrowJson.graphs[0]).to.include({
+                    type: 'bar',
+                    color: '#f9a825',
+                    legendText: 'Energy forecast',
+                    yAxis_appendix: ' kWh',
+                    tooltip_AppendText: ' kWh',
+                    yAxis_min: 0,
+                    datalabel_show: false,
+                });
+                expect(hourlyTodayJson.graphs[0].data).to.have.lengthOf(24);
+                expect(hourlyTomorrowJson.graphs[0].data).to.have.lengthOf(24);
+                expect(hourlyTodayJson.graphs[0].data[0]).to.equal(0.22);
+                expect(hourlyTomorrowJson.graphs[0].data[0]).to.equal(0.22);
                 expect(dailyJson.axisLabels).to.deep.equal([
                     formatChartDateLabel(today),
                     formatChartDateLabel(tomorrow),

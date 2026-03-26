@@ -248,9 +248,23 @@ export class AdapterRuntime {
         await this.ensureChannel('forecast.hourly', 'Hourly forecast data');
         await this.ensureChannel('forecast.hourly.timestamps', 'Hourly forecast grouped by local timestamp');
         await this.ensureChannel('forecast.json', 'JSON mirrors');
-        await this.ensureState('forecast.json.hourly', 'Hourly Material Design chart JSON', 'string', 'json', false);
+        await this.ensureState(
+            'forecast.json.hourlyToday',
+            'Today hourly Material Design chart JSON',
+            'string',
+            'json',
+            false,
+        );
+        await this.ensureState(
+            'forecast.json.hourlyTomorrow',
+            'Tomorrow hourly Material Design chart JSON',
+            'string',
+            'json',
+            false,
+        );
         await this.ensureState('forecast.json.daily', 'Daily Material Design chart JSON', 'string', 'json', false);
         await this.ensureState('forecast.json.summary', 'Summary JSON', 'string', 'json', false);
+        await this.cleanupLegacyJsonStates();
 
         for (let index = 0; index < 7; index++) {
             const prefix = `forecast.daily.day${index}`;
@@ -272,9 +286,14 @@ export class AdapterRuntime {
         await this.writeSummaryStates(snapshot);
         await this.writeDailyStates(snapshot.daily);
         await this.syncHourlyStates(snapshot.hourly);
+        const { todayRows, tomorrowRows } = this.splitHourlyRows(snapshot.hourly);
 
-        await this.adapter.setStateAsync('forecast.json.hourly', {
-            val: JSON.stringify(formatHourlyMaterialDesignChart(snapshot.hourly)),
+        await this.adapter.setStateAsync('forecast.json.hourlyToday', {
+            val: JSON.stringify(formatHourlyMaterialDesignChart(todayRows)),
+            ack: true,
+        });
+        await this.adapter.setStateAsync('forecast.json.hourlyTomorrow', {
+            val: JSON.stringify(formatHourlyMaterialDesignChart(tomorrowRows)),
             ack: true,
         });
         await this.adapter.setStateAsync('forecast.json.daily', {
@@ -332,6 +351,25 @@ export class AdapterRuntime {
                 val: day.energyKwh,
                 ack: true,
             });
+        }
+    }
+
+    private splitHourlyRows(rows: readonly ForecastRow[]): { todayRows: ForecastRow[]; tomorrowRows: ForecastRow[] } {
+        const uniqueDates = Array.from(new Set(rows.map(row => row.localDate)));
+        const todayDate = uniqueDates[0];
+        const tomorrowDate = uniqueDates[1];
+
+        return {
+            todayRows: todayDate ? rows.filter(row => row.localDate === todayDate) : [],
+            tomorrowRows: tomorrowDate ? rows.filter(row => row.localDate === tomorrowDate) : [],
+        };
+    }
+
+    private async cleanupLegacyJsonStates(): Promise<void> {
+        const legacyHourlyStateId = 'forecast.json.hourly';
+        const adapterObjects = await this.adapter.getAdapterObjectsAsync();
+        if (`${this.adapter.namespace}.${legacyHourlyStateId}` in adapterObjects) {
+            await this.adapter.delObjectAsync(legacyHourlyStateId);
         }
     }
 
