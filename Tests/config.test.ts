@@ -15,6 +15,8 @@ describe('resolveEffectiveConfig', () => {
             tiltDeg: undefined as unknown as number,
             azimuthDeg: undefined as unknown as number,
             peakPowerKwp: 2.2,
+            morningDampingPct: undefined as unknown as number,
+            afternoonDampingPct: undefined as unknown as number,
         } as ioBroker.AdapterConfig);
 
         expect(config.locationMode).to.equal('geocode');
@@ -27,6 +29,8 @@ describe('resolveEffectiveConfig', () => {
         expect(config.tiltDeg).to.equal(0);
         expect(config.azimuthDeg).to.equal(0);
         expect(config.peakPowerKwp).to.equal(2.2);
+        expect(config.morningDampingPct).to.equal(100);
+        expect(config.afternoonDampingPct).to.equal(100);
     });
 
     it('validates the manual coordinate mode', () => {
@@ -41,6 +45,8 @@ describe('resolveEffectiveConfig', () => {
             tiltDeg: 35,
             azimuthDeg: -15,
             peakPowerKwp: 9.8,
+            morningDampingPct: 85,
+            afternoonDampingPct: 70,
         } as ioBroker.AdapterConfig);
 
         expect(config.locationMode).to.equal('manual');
@@ -51,6 +57,8 @@ describe('resolveEffectiveConfig', () => {
         expect(config.tiltDeg).to.equal(35);
         expect(config.azimuthDeg).to.equal(-15);
         expect(config.peakPowerKwp).to.equal(9.8);
+        expect(config.morningDampingPct).to.equal(85);
+        expect(config.afternoonDampingPct).to.equal(70);
     });
 
     it('rejects missing legacy-to-new peak power migrations', () => {
@@ -66,6 +74,8 @@ describe('resolveEffectiveConfig', () => {
                 tiltDeg: 0,
                 azimuthDeg: 0,
                 peakPowerKwp: undefined as unknown as number,
+                morningDampingPct: 100,
+                afternoonDampingPct: 100,
             } as ioBroker.AdapterConfig),
         ).to.throw('peakPowerKwp');
     });
@@ -83,6 +93,8 @@ describe('resolveEffectiveConfig', () => {
                 tiltDeg: 0,
                 azimuthDeg: 0,
                 peakPowerKwp: 2.2,
+                morningDampingPct: 100,
+                afternoonDampingPct: 100,
             } as ioBroker.AdapterConfig),
         ).to.throw('latitude');
 
@@ -98,6 +110,8 @@ describe('resolveEffectiveConfig', () => {
                 tiltDeg: 0,
                 azimuthDeg: 0,
                 peakPowerKwp: 2.2,
+                morningDampingPct: 100,
+                afternoonDampingPct: 100,
             } as ioBroker.AdapterConfig),
         ).to.throw('timezone');
 
@@ -113,7 +127,43 @@ describe('resolveEffectiveConfig', () => {
                 tiltDeg: 0,
                 azimuthDeg: 0,
                 peakPowerKwp: 0,
+                morningDampingPct: 100,
+                afternoonDampingPct: 100,
             } as ioBroker.AdapterConfig),
         ).to.throw('peakPowerKwp');
+
+        expect(() =>
+            resolveEffectiveConfig({
+                locationMode: 'geocode',
+                city: 'Berlin',
+                countryCode: '',
+                latitude: 0,
+                longitude: 0,
+                timezoneMode: 'auto',
+                timezone: '',
+                tiltDeg: 0,
+                azimuthDeg: 0,
+                peakPowerKwp: 2.2,
+                morningDampingPct: 101,
+                afternoonDampingPct: 100,
+            } as ioBroker.AdapterConfig),
+        ).to.throw('morningDampingPct');
+
+        expect(() =>
+            resolveEffectiveConfig({
+                locationMode: 'geocode',
+                city: 'Berlin',
+                countryCode: '',
+                latitude: 0,
+                longitude: 0,
+                timezoneMode: 'auto',
+                timezone: '',
+                tiltDeg: 0,
+                azimuthDeg: 0,
+                peakPowerKwp: 2.2,
+                morningDampingPct: 100,
+                afternoonDampingPct: -1,
+            } as ioBroker.AdapterConfig),
+        ).to.throw('afternoonDampingPct');
     });
 });

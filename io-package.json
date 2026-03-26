@@ -4,17 +4,17 @@
         "version": "0.5.0",
         "news": {
             "0.5.0": {
-                "en": "Replaced panel area and efficiency with peak power, fixed the city validation status display, and added a remaining-today energy summary.",
-                "de": "Anlagenflaeche und Effizienz durch Peakleistung ersetzt, Anzeige der Stadtpruefung korrigiert und Rest-des-Tages-Energiesumme hinzugefuegt.",
-                "ru": "Panel area and efficiency were replaced with peak power, the city validation status display was fixed, and a remaining-today energy summary was added.",
-                "pt": "Panel area and efficiency were replaced with peak power, the city validation status display was fixed, and a remaining-today energy summary was added.",
-                "nl": "Panel area and efficiency were replaced with peak power, the city validation status display was fixed, and a remaining-today energy summary was added.",
-                "fr": "Panel area and efficiency were replaced with peak power, the city validation status display was fixed, and a remaining-today energy summary was added.",
-                "it": "Panel area and efficiency were replaced with peak power, the city validation status display was fixed, and a remaining-today energy summary was added.",
-                "es": "Panel area and efficiency were replaced with peak power, the city validation status display was fixed, and a remaining-today energy summary was added.",
-                "pl": "Panel area and efficiency were replaced with peak power, the city validation status display was fixed, and a remaining-today energy summary was added.",
-                "uk": "Panel area and efficiency were replaced with peak power, the city validation status display was fixed, and a remaining-today energy summary was added.",
-                "zh-cn": "Panel area and efficiency were replaced with peak power, the city validation status display was fixed, and a remaining-today energy summary was added."
+                "en": "Replaced panel area and efficiency with peak power, fixed the city validation status display, added a remaining-today energy summary, and introduced morning/afternoon damping factors.",
+                "de": "Anlagenflaeche und Effizienz durch Peakleistung ersetzt, Anzeige der Stadtpruefung korrigiert, Rest-des-Tages-Energiesumme hinzugefuegt und Daempfungsfaktoren fuer Vor- und Nachmittag eingefuehrt.",
+                "ru": "Replaced panel area and efficiency with peak power, fixed the city validation status display, added a remaining-today energy summary, and introduced morning/afternoon damping factors.",
+                "pt": "Replaced panel area and efficiency with peak power, fixed the city validation status display, added a remaining-today energy summary, and introduced morning/afternoon damping factors.",
+                "nl": "Replaced panel area and efficiency with peak power, fixed the city validation status display, added a remaining-today energy summary, and introduced morning/afternoon damping factors.",
+                "fr": "Replaced panel area and efficiency with peak power, fixed the city validation status display, added a remaining-today energy summary, and introduced morning/afternoon damping factors.",
+                "it": "Replaced panel area and efficiency with peak power, fixed the city validation status display, added a remaining-today energy summary, and introduced morning/afternoon damping factors.",
+                "es": "Replaced panel area and efficiency with peak power, fixed the city validation status display, added a remaining-today energy summary, and introduced morning/afternoon damping factors.",
+                "pl": "Replaced panel area and efficiency with peak power, fixed the city validation status display, added a remaining-today energy summary, and introduced morning/afternoon damping factors.",
+                "uk": "Replaced panel area and efficiency with peak power, fixed the city validation status display, added a remaining-today energy summary, and introduced morning/afternoon damping factors.",
+                "zh-cn": "Replaced panel area and efficiency with peak power, fixed the city validation status display, added a remaining-today energy summary, and introduced morning/afternoon damping factors."
             },
             "0.2.5": {
                 "en": "initial release",
@@ -99,7 +99,9 @@
         "timezone": "Europe/Berlin",
         "tiltDeg": 0,
         "azimuthDeg": 0,
-        "peakPowerKwp": 2.2
+        "peakPowerKwp": 2.2,
+        "morningDampingPct": 100,
+        "afternoonDampingPct": 100
     },
     "objects": [],
     "instanceObjects": [

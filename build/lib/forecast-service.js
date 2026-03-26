@@ -100,15 +100,21 @@ class ForecastService {
       }
       const gtiWm2 = typeof irradianceValues[index] === "number" ? irradianceValues[index] : 0;
       const cloudCoverPercent = typeof cloudCoverValues[index] === "number" ? cloudCoverValues[index] : 0;
+      const dampingFactor = this.getDampingFactor(timestamp.slice(11, 16), config);
       return {
         timestamp,
         localDate: timestamp.slice(0, 10),
         localTime: timestamp.slice(11, 16),
-        energyKwh: (0, import_dates.roundNumber)(gtiWm2 * config.peakPowerKwp / 1e3),
+        energyKwh: (0, import_dates.roundNumber)(gtiWm2 * config.peakPowerKwp / 1e3 * dampingFactor),
         cloudCoverPercent: (0, import_dates.roundNumber)(cloudCoverPercent, 1),
         gtiWm2: (0, import_dates.roundNumber)(gtiWm2, 2)
       };
     });
+  }
+  getDampingFactor(localTime, config) {
+    const hour = Number(localTime.slice(0, 2));
+    const dampingPct = hour < 12 ? config.morningDampingPct : config.afternoonDampingPct;
+    return dampingPct / 100;
   }
   buildDailyForecast(rows, startDate) {
     var _a;

@@ -14,6 +14,8 @@ declare global {
             tiltDeg: number;
             azimuthDeg: number;
             peakPowerKwp: number;
+            morningDampingPct: number;
+            afternoonDampingPct: number;
         }
     }
 }

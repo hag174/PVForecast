@@ -29,11 +29,19 @@ const DEFAULT_CITY = "Berlin";
 const DEFAULT_TIME_ZONE = "Europe/Berlin";
 const DEFAULT_TILT_DEG = 0;
 const DEFAULT_AZIMUTH_DEG = 0;
+const DEFAULT_MORNING_DAMPING_PCT = 100;
+const DEFAULT_AFTERNOON_DAMPING_PCT = 100;
 const REQUIRED_CONFIG_MESSAGE_SUFFIX = "Open the adapter settings and save the instance again.";
 function normalizeOptionalText(value) {
   return typeof value === "string" ? value.trim() : "";
 }
 function toFiniteNumber(value, fieldName, fallback) {
+  if (typeof value === "string" && value.trim() === "") {
+    if (fallback !== void 0) {
+      return fallback;
+    }
+    throw new Error(`The configuration field "${fieldName}" must be a number.`);
+  }
   const numericValue = Number(value);
   if (Number.isFinite(numericValue)) {
     return numericValue;
@@ -82,8 +90,24 @@ function resolveEffectiveConfig(config) {
   const tiltDeg = toFiniteNumber(config.tiltDeg, "tiltDeg", DEFAULT_TILT_DEG);
   const azimuthDeg = toFiniteNumber(config.azimuthDeg, "azimuthDeg", DEFAULT_AZIMUTH_DEG);
   const peakPowerKwp = toRequiredFiniteNumber(config.peakPowerKwp, "peakPowerKwp");
+  const morningDampingPct = toFiniteNumber(
+    config.morningDampingPct,
+    "morningDampingPct",
+    DEFAULT_MORNING_DAMPING_PCT
+  );
+  const afternoonDampingPct = toFiniteNumber(
+    config.afternoonDampingPct,
+    "afternoonDampingPct",
+    DEFAULT_AFTERNOON_DAMPING_PCT
+  );
   if (peakPowerKwp <= 0) {
     throw new Error("peakPowerKwp must be greater than zero.");
+  }
+  if (morningDampingPct < 0 || morningDampingPct > 100) {
+    throw new Error("morningDampingPct must be between 0 and 100 percent.");
+  }
+  if (afternoonDampingPct < 0 || afternoonDampingPct > 100) {
+    throw new Error("afternoonDampingPct must be between 0 and 100 percent.");
   }
   if (tiltDeg < 0 || tiltDeg > 90) {
     throw new Error("tiltDeg must be between 0 and 90 degrees.");
@@ -117,7 +141,9 @@ function resolveEffectiveConfig(config) {
     timeZone: timezoneMode === "manual" ? configuredTimeZone : "auto",
     tiltDeg,
     azimuthDeg,
-    peakPowerKwp
+    peakPowerKwp,
+    morningDampingPct,
+    afternoonDampingPct
   };
 }
 // Annotate the CommonJS export names for ESM import in node:

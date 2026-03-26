@@ -9,6 +9,7 @@ Solar forecast adapter for ioBroker using Open-Meteo.
 - Resolves a location either by city name or manual coordinates
 - Retrieves hourly `global_tilted_irradiance` and `cloud_cover` from Open-Meteo
 - Calculates hourly PV energy in `kWh` from irradiance and configured peak power
+- Applies separate morning and afternoon damping factors to the PV energy
 - Publishes hourly forecast data for today and tomorrow
 - Publishes daily totals for today plus the next 6 days
 - Publishes current calendar week and current calendar month totals
@@ -27,6 +28,8 @@ The adapter uses a JSON Config based admin UI with these fields:
 - `tiltDeg`: panel tilt in degrees, default `0`
 - `azimuthDeg`: panel azimuth in degrees, default `0`
 - `peakPowerKwp`: installed PV peak power in `kWp`, default `2.2`
+- `morningDampingPct`: damping factor in percent for `00:00` to `11:59`, default `100`
+- `afternoonDampingPct`: damping factor in percent for `12:00` to `23:59`, default `100`
 
 In geocode mode the settings dialog can validate the configured city directly against Open-Meteo.
 Successful validation updates the effective coordinates and timezone preview in the form and enables saving while the current city selection stays unchanged.
@@ -87,6 +90,7 @@ Project-specific unit tests live in `Tests/`. Template package and integration t
 - replaced panel area and efficiency with peak power in the settings
 - fixed the city validation status display in the admin dialog
 - added `summary.today.remaining_energy_kwh` and `todayRemainingEnergyKwh` in `forecast.json.summary`
+- added morning and afternoon damping factors for PV energy calculations
 
 ### 0.2.5
 

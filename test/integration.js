@@ -178,6 +178,8 @@ async function configureAdapter(harness) {
             tiltDeg: 0,
             azimuthDeg: 0,
             peakPowerKwp: 2.2,
+            morningDampingPct: 100,
+            afternoonDampingPct: 100,
         },
     });
 }

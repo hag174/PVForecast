@@ -14,6 +14,8 @@ export interface EffectiveConfig {
     tiltDeg: number;
     azimuthDeg: number;
     peakPowerKwp: number;
+    morningDampingPct: number;
+    afternoonDampingPct: number;
 }
 
 export interface LocationResolutionConfig {

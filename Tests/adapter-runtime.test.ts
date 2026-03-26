@@ -21,6 +21,8 @@ function createAdapterConfig(): ioBroker.AdapterConfig {
         tiltDeg: 35,
         azimuthDeg: -15,
         peakPowerKwp: 2.2,
+        morningDampingPct: 100,
+        afternoonDampingPct: 100,
     } as ioBroker.AdapterConfig;
 }
 

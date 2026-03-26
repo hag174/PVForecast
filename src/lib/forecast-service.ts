@@ -115,16 +115,23 @@ export class ForecastService {
 
             const gtiWm2 = typeof irradianceValues[index] === 'number' ? irradianceValues[index] : 0;
             const cloudCoverPercent = typeof cloudCoverValues[index] === 'number' ? cloudCoverValues[index] : 0;
+            const dampingFactor = this.getDampingFactor(timestamp.slice(11, 16), config);
 
             return {
                 timestamp,
                 localDate: timestamp.slice(0, 10),
                 localTime: timestamp.slice(11, 16),
-                energyKwh: roundNumber((gtiWm2 * config.peakPowerKwp) / 1000),
+                energyKwh: roundNumber(((gtiWm2 * config.peakPowerKwp) / 1000) * dampingFactor),
                 cloudCoverPercent: roundNumber(cloudCoverPercent, 1),
                 gtiWm2: roundNumber(gtiWm2, 2),
             };
         });
+    }
+
+    private getDampingFactor(localTime: string, config: EffectiveConfig): number {
+        const hour = Number(localTime.slice(0, 2));
+        const dampingPct = hour < 12 ? config.morningDampingPct : config.afternoonDampingPct;
+        return dampingPct / 100;
     }
 
     private buildDailyForecast(rows: ForecastRow[], startDate: string): DailyForecast[] {

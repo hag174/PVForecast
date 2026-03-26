@@ -124,6 +124,22 @@
             "en": "Installed PV peak power in kilowatt-peak used for the energy forecast.",
             "de": "Installierte PV-Peakleistung in Kilowatt-Peak, die fuer die Energieprognose verwendet wird."
         },
+        "Morning damping in percent": {
+            "en": "Morning damping in percent",
+            "de": "Daempfung Vormittag in Prozent"
+        },
+        "Multiplier applied to PV energy from 00:00 to 11:59. 100 keeps the original energy.": {
+            "en": "Multiplier applied to PV energy from 00:00 to 11:59. 100 keeps the original energy.",
+            "de": "Multiplikator fuer PV-Energie von 00:00 bis 11:59. 100 behaelt die urspruengliche Energie bei."
+        },
+        "Afternoon damping in percent": {
+            "en": "Afternoon damping in percent",
+            "de": "Daempfung Nachmittag in Prozent"
+        },
+        "Multiplier applied to PV energy from 12:00 to 23:59. 100 keeps the original energy.": {
+            "en": "Multiplier applied to PV energy from 12:00 to 23:59. 100 keeps the original energy.",
+            "de": "Multiplikator fuer PV-Energie von 12:00 bis 23:59. 100 behaelt die urspruengliche Energie bei."
+        },
         "Validate the current city selection before saving while the instance is running.": {
             "en": "Validate the current city selection before saving while the instance is running.",
             "de": "Prüfen Sie die aktuelle Stadtauswahl, bevor Sie speichern, solange die Instanz läuft."
@@ -308,6 +324,34 @@
             "label": "Peak power in kWp",
             "help": "Installed PV peak power in kilowatt-peak used for the energy forecast.",
             "min": 0.1,
+            "step": 0.1,
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 4
+        },
+        "morningDampingPct": {
+            "type": "number",
+            "label": "Morning damping in percent",
+            "help": "Multiplier applied to PV energy from 00:00 to 11:59. 100 keeps the original energy.",
+            "min": 0,
+            "max": 100,
+            "step": 0.1,
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 4
+        },
+        "afternoonDampingPct": {
+            "type": "number",
+            "label": "Afternoon damping in percent",
+            "help": "Multiplier applied to PV energy from 12:00 to 23:59. 100 keeps the original energy.",
+            "min": 0,
+            "max": 100,
             "step": 0.1,
             "newLine": true,
             "xs": 12,
