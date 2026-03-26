@@ -1,10 +1,10 @@
 ---
 title: project_index
 type: note
-permalink: pvforecast/project-index
+permalink: solarforecast/project-index
 ---
 
-# PVForecast Project Index
+# SolarForecast Project Index
 
 ## Purpose
 This project implements a solar forecast adapter for ioBroker using the Open-Meteo forecast API.
@@ -16,8 +16,10 @@ This project implements a solar forecast adapter for ioBroker using the Open-Met
 - `history/2026_03_20_initial_implementation` records the first implemented adapter milestone and verification status.
 
 ## Current Status
-- Basic Memory project `PVForecast` is configured for this repository.
-- Project storage path points to `/home/hagen/Programming/PVForecast/memory`.
-- Codex MCP is configured to launch Basic Memory with `--project PVForecast`.
-- The repository now contains the initial TypeScript ioBroker adapter scaffold and first functional PV forecast implementation.
-- Current verification status: `npm run check`, `npm run lint`, `npm test`, `npm run coverage`, `npm run build`, and `npm run test:integration` are passing when the host JS-Controller is stopped before the integration run.
+- The checked-in project memory for this repository lives in `/home/hagen/Programming/SolarForecast/memory`.
+- The adapter configuration uses `peakPowerKwp`, `morningDampingPct`, and `afternoonDampingPct`.
+- The admin city-check path is restricted to admin-originated requests, uses a `10000 ms` timeout, and throttles repeated checks for `1000 ms`.
+- Energy forecast states use the ioBroker role `value.power.consumption`.
+- `forecast.json.hourly` and `forecast.json.daily` now publish Material Design JSON Chart payloads with `axisLabels` and `graphs`.
+- The raw-array format of `forecast.json.hourly` and `forecast.json.daily` has been removed as a breaking change.
+- The preferred full verification flow is `npm run verify`.

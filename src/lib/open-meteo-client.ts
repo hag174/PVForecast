@@ -1,4 +1,3 @@
-import { readFile } from 'node:fs/promises';
 import type { GeocodingResult, OpenMeteoForecastResponse } from './types';
 
 interface GeocodingApiResponse {
@@ -21,14 +20,6 @@ interface ForecastRequestOptions {
     azimuthDeg: number;
     signal?: AbortSignal;
 }
-
-interface OpenMeteoTestFixtures {
-    geocode?: GeocodingApiResponse;
-    forecast?: OpenMeteoForecastResponse;
-}
-
-const TEST_FIXTURES_ENV = 'SOLARFORECAST_TEST_FIXTURES';
-const fixtureCache = new Map<string, OpenMeteoTestFixtures>();
 
 function isDefinedNumber(value: unknown): value is number {
     return typeof value === 'number' && Number.isFinite(value);
@@ -54,11 +45,6 @@ export class OpenMeteoClient {
      * @returns The best matching geocoding result.
      */
     public async geocode(city: string, countryCode?: string, signal?: AbortSignal): Promise<GeocodingResult> {
-        const fixtureResponse = await this.readFixtureResponse<GeocodingApiResponse>('geocode');
-        if (fixtureResponse) {
-            return this.extractGeocodingResult(city, countryCode, fixtureResponse);
-        }
-
         const url = new URL('https://geocoding-api.open-meteo.com/v1/search');
         url.searchParams.set('name', city);
         url.searchParams.set('count', '10');
@@ -76,11 +62,6 @@ export class OpenMeteoClient {
      * @returns The raw Open-Meteo forecast payload.
      */
     public async fetchForecast(options: ForecastRequestOptions): Promise<OpenMeteoForecastResponse> {
-        const fixtureResponse = await this.readFixtureResponse<OpenMeteoForecastResponse>('forecast');
-        if (fixtureResponse) {
-            return fixtureResponse;
-        }
-
         const url = new URL('https://api.open-meteo.com/v1/forecast');
         url.searchParams.set('latitude', options.latitude.toString());
         url.searchParams.set('longitude', options.longitude.toString());
@@ -147,21 +128,5 @@ export class OpenMeteoClient {
             longitude,
             timeZone,
         };
-    }
-
-    private async readFixtureResponse<T>(kind: keyof OpenMeteoTestFixtures): Promise<T | undefined> {
-        const fixturePath = process.env[TEST_FIXTURES_ENV];
-        if (!fixturePath) {
-            return undefined;
-        }
-
-        let fixtures = fixtureCache.get(fixturePath);
-        if (!fixtures) {
-            const fixtureContent = await readFile(fixturePath, 'utf8');
-            fixtures = JSON.parse(fixtureContent) as OpenMeteoTestFixtures;
-            fixtureCache.set(fixturePath, fixtures);
-        }
-
-        return fixtures[kind] as T | undefined;
     }
 }

@@ -1,7 +1,7 @@
 ---
 title: codex_workflow
 type: note
-permalink: pvforecast/core/codex-workflow
+permalink: solarforecast/core/codex-workflow
 tags:
 - workflow
 - codex
@@ -14,6 +14,7 @@ tags:
 - During adapter implementation, update `AGENTS.MD` so that the repository instructions stay aligned with the actual adapter stack and test setup.
 - Persist important implementation decisions and progress notes in Basic Memory while working.
 - Before any context compaction or handoff, write the current implementation state and open decisions to Basic Memory first.
+- If Basic Memory is constrained to the wrong project, fix the checked-in notes in `memory/` and call out the MCP limitation explicitly.
 
 ## Memory handling
 - Prefer updating existing notes over creating duplicates.

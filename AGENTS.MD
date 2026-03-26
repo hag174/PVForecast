@@ -26,8 +26,9 @@ This project implements a TypeScript ioBroker adapter for PV forecast data based
 - `timezone`: default `Europe/Berlin`
 - `tiltDeg`: default `0`
 - `azimuthDeg`: default `0`
-- `arrayAreaM2`: default `10`
-- `panelEfficiencyPct`: default `22`
+- `peakPowerKwp`: default `2.2`
+- `morningDampingPct`: default `100`
+- `afternoonDampingPct`: default `100`
 
 ## Documentation and support
 
@@ -42,7 +43,7 @@ This project implements a TypeScript ioBroker adapter for PV forecast data based
 - Before deep analysis or implementation, access the project memory via the external `basic-memory` MCP server, starting with the note `memory/project_index.md`.
 - Do not open files under `memory/` directly via shell/file reads when `basic-memory` is available.
 - If you do not have access to the `basic-memory` MCP server, stop and inform the user.
-- Direct filesystem access to `memory/` is fallback-only and must be called out explicitly if `basic-memory` is unavailable or broken.
+- Direct filesystem access to `memory/` is fallback-only and must be called out explicitly if `basic-memory` is unavailable, broken, or constrained to the wrong project.
 - If memory conflicts with the current codebase state, the current code wins; update the relevant note so the memory stays aligned.
 
 ### 0.1) Memory maintenance protocol
@@ -70,3 +71,4 @@ This project implements a TypeScript ioBroker adapter for PV forecast data based
 - Place project-specific tests in the `Tests/` folder.
 - Keep the generated package and integration tests in the `test/` folder.
 - Run `npm run check`, `npm run lint`, `npm test`, and `npm run build` after substantial changes when feasible.
+- Run `npm run verify` when the full integration path is part of the change or before handoff when feasible.

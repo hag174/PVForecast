@@ -1,7 +1,7 @@
 ---
 title: 2026_03_20_initial_implementation
 type: note
-permalink: pvforecast/history/2026-03-20-initial-implementation
+permalink: solarforecast/history/2026-03-20-initial-implementation
 tags:
 - history
 - implementation
@@ -12,7 +12,7 @@ tags:
 
 ## Completed work
 - Generated the repository from the official ioBroker TypeScript adapter scaffold.
-- Implemented JSON Config based adapter settings for geocoding/manual coordinates, timezone handling, tilt, azimuth, array area, and panel efficiency.
+- Implemented JSON Config based adapter settings for geocoding/manual coordinates, timezone handling, tilt, azimuth, peak power, and morning/afternoon damping.
 - Implemented Open-Meteo geocoding and forecast clients.
 - Implemented PV forecast transformation with hourly kWh calculation, daily totals for day0..day6, and calendar week/month summaries with completeness flags.
 - Implemented ioBroker state writing for `info`, `location`, `summary`, `forecast.daily`, `forecast.hourly.timestamps`, and JSON mirror states.
@@ -51,11 +51,11 @@ tags:
 - `mochaExplorer.autoload` remains disabled so the broken extension does not spam automatic discovery attempts if it is still installed locally.
 
 ## Repository metadata alignment
-- Updated repository links in `io-package.json` and `package.json` from the scaffold placeholder `Hagen/ioBroker.pvforecast` to the actual GitHub repository `hag174/PVForecast`.
+- Updated repository links in `io-package.json` and `package.json` from the scaffold placeholder adapter repository to the actual GitHub repository `hag174/ioBroker.solarforecast`.
 - Corrected the external icon URL, README URL, homepage URL, repository URL, and issues URL.
 
 ## Visual identity
-- Replaced `admin/pvforecast.png` with a newly generated 320x320 PNG icon showing a stylized sun, sky and solar panels for a clearer PV-focused adapter identity.
+- Replaced `admin/solarforecast.png` with a newly generated 320x320 PNG icon showing a stylized sun, sky and solar panels for a clearer PV-focused adapter identity.
 
 ## Setup command reference
 - Updated `requirements.txt` into a documented setup-command reference for this repository.
@@ -90,7 +90,7 @@ tags:
 
 ## Integration test expansion 2026-03-21
 - Extended `test/integration.js` with fixture-driven integration suites that validate successful forecast state publishing and the refresh error path against a real JS-Controller test harness.
-- Added a test-only Open-Meteo fixture hook via `PVFORECAST_TEST_FIXTURES` so integration tests can avoid live network access while still exercising the real adapter process.
+- Added a test-only Open-Meteo mocking path for integration tests so the real adapter process can avoid live network access without adding product-code hooks.
 - The success-path integration test now verifies `info.connection`, `info.lastError`, `location.*`, `summary.today.energy_kwh`, daily forecast states, hourly JSON output, and stale hourly channel cleanup.
 - The failure-path integration test now verifies that invalid forecast payloads keep the adapter alive but set `info.connection = false` and populate `info.lastError`.
 - Re-verified `npm run test:integration` successfully after stopping the host JS-Controller; the suite now reports 3 passing tests.
@@ -98,4 +98,10 @@ tags:
 ## Metadata alignment fix 2026-03-21
 - Corrected `info.lastUpdate` from role `value.time` to `value.datetime` while keeping the state value as the existing ISO datetime string.
 - Added regression coverage in the runtime unit test and in the integration success path so the object metadata is checked alongside the state value.
-- Re-verified `npm run check` and `npm run build`; the TypeScript test suite passed, while `npm test` is currently blocked by an unrelated existing version mismatch between `package.json` (`0.0.1`) and `io-package.json` (`0.2.5`).
+- Re-verified `npm run check` and `npm run build`; the TypeScript test suite passed while the repository still needed further quality hardening around integration coverage.
+
+## Quality hardening update 2026-03-26
+- Removed the Open-Meteo fixture file hook from product code and moved integration mocking to a test-only preload under `test/`.
+- Added a dedicated admin message handler that accepts only admin-originated `resolveLocationConfig` requests, validates payload lengths and formats, enforces a `10000 ms` timeout, and throttles repeated requests for `1000 ms`.
+- Updated all `*.energy_kwh` objects to use the ioBroker role `value.power.consumption`.
+- Added `npm run verify`, a JS-Controller preflight wrapper for `npm run test:integration`, an explicit CI integration-test job, and a governance consistency test that detects legacy names and stale memory terms.

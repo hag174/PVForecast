@@ -26,6 +26,7 @@ module.exports = __toCommonJS(adapter_runtime_exports);
 var import_config = require("./config");
 var import_dates = require("./dates");
 var import_forecast_service = require("./forecast-service");
+var import_material_design_chart = require("./material-design-chart");
 const HOURLY_REFRESH_INTERVAL_MS = 60 * 60 * 1e3;
 const REQUEST_TIMEOUT_MS = 3e4;
 class AdapterRuntime {
@@ -164,12 +165,19 @@ class AdapterRuntime {
     await this.ensureState("location.longitude", "Longitude", "number", "value.gps.longitude", false, "\xB0");
     await this.ensureState("location.timezone", "Effective timezone", "string", "text", false);
     await this.ensureChannel("summary", "Energy summaries");
-    await this.ensureState("summary.today.energy_kwh", "Today energy forecast", "number", "value", false, "kWh");
+    await this.ensureState(
+      "summary.today.energy_kwh",
+      "Today energy forecast",
+      "number",
+      "value.power.consumption",
+      false,
+      "kWh"
+    );
     await this.ensureState(
       "summary.today.remaining_energy_kwh",
       "Remaining energy forecast for today",
       "number",
-      "value",
+      "value.power.consumption",
       false,
       "kWh"
     );
@@ -177,7 +185,7 @@ class AdapterRuntime {
       "summary.currentWeek.energy_kwh",
       "Current week energy forecast",
       "number",
-      "value",
+      "value.power.consumption",
       false,
       "kWh"
     );
@@ -192,7 +200,7 @@ class AdapterRuntime {
       "summary.currentMonth.energy_kwh",
       "Current month energy forecast",
       "number",
-      "value",
+      "value.power.consumption",
       false,
       "kWh"
     );
@@ -208,14 +216,21 @@ class AdapterRuntime {
     await this.ensureChannel("forecast.hourly", "Hourly forecast data");
     await this.ensureChannel("forecast.hourly.timestamps", "Hourly forecast grouped by local timestamp");
     await this.ensureChannel("forecast.json", "JSON mirrors");
-    await this.ensureState("forecast.json.hourly", "Hourly forecast JSON", "string", "json", false);
-    await this.ensureState("forecast.json.daily", "Daily forecast JSON", "string", "json", false);
+    await this.ensureState("forecast.json.hourly", "Hourly Material Design chart JSON", "string", "json", false);
+    await this.ensureState("forecast.json.daily", "Daily Material Design chart JSON", "string", "json", false);
     await this.ensureState("forecast.json.summary", "Summary JSON", "string", "json", false);
     for (let index = 0; index < 7; index++) {
       const prefix = `forecast.daily.day${index}`;
       await this.ensureChannel(prefix, `Daily forecast day ${index}`);
       await this.ensureState(`${prefix}.date`, `Date for day ${index}`, "string", "value.date", false);
-      await this.ensureState(`${prefix}.energy_kwh`, `Energy for day ${index}`, "number", "value", false, "kWh");
+      await this.ensureState(
+        `${prefix}.energy_kwh`,
+        `Energy for day ${index}`,
+        "number",
+        "value.power.consumption",
+        false,
+        "kWh"
+      );
     }
   }
   async writeSnapshot(snapshot) {
@@ -224,11 +239,11 @@ class AdapterRuntime {
     await this.writeDailyStates(snapshot.daily);
     await this.syncHourlyStates(snapshot.hourly);
     await this.adapter.setStateAsync("forecast.json.hourly", {
-      val: JSON.stringify(snapshot.hourly),
+      val: JSON.stringify((0, import_material_design_chart.formatHourlyMaterialDesignChart)(snapshot.hourly)),
       ack: true
     });
     await this.adapter.setStateAsync("forecast.json.daily", {
-      val: JSON.stringify(snapshot.daily),
+      val: JSON.stringify((0, import_material_design_chart.formatDailyMaterialDesignChart)(snapshot.daily)),
       ack: true
     });
     await this.adapter.setStateAsync("forecast.json.summary", {
@@ -296,7 +311,7 @@ class AdapterRuntime {
         `${channelId}.energy_kwh`,
         "Forecast energy for this hour",
         "number",
-        "value",
+        "value.power.consumption",
         false,
         "kWh"
       );

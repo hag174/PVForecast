@@ -23,10 +23,10 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 ));
 var utils = __toESM(require("@iobroker/adapter-core"));
 var import_adapter_runtime = require("./lib/adapter-runtime");
-var import_location_resolver = require("./lib/location-resolver");
+var import_admin_location_message_handler = require("./lib/admin-location-message-handler");
 class Solarforecast extends utils.Adapter {
   runtime = new import_adapter_runtime.AdapterRuntime(this);
-  locationResolver = new import_location_resolver.LocationResolver();
+  adminLocationMessageHandler = new import_admin_location_message_handler.AdminLocationMessageHandler(this);
   constructor(options = {}) {
     super({
       ...options,
@@ -37,11 +37,7 @@ class Solarforecast extends utils.Adapter {
     this.on("message", this.onMessage.bind(this));
   }
   async onMessage(obj) {
-    if (!obj || obj.command !== import_location_resolver.RESOLVE_LOCATION_CONFIG_COMMAND || !obj.callback) {
-      return;
-    }
-    const response = await this.locationResolver.validateGeocodeLocation(obj.message);
-    this.sendTo(obj.from, obj.command, response, obj.callback);
+    await this.adminLocationMessageHandler.handleMessage(obj);
   }
 }
 if (require.main !== module) {
