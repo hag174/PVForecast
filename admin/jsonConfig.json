@@ -52,9 +52,9 @@
             "en": "Check city and apply",
             "de": "Stadt prüfen und übernehmen"
         },
-        "Queries Open-Meteo, shows whether the city was found and applies matching coordinates.": {
-            "en": "Queries Open-Meteo, shows whether the city was found and applies matching coordinates.",
-            "de": "Fragt Open-Meteo ab, zeigt an, ob die Stadt gefunden wurde, und übernimmt passende Koordinaten."
+        "Runs an admin-only city check against Open-Meteo, applies matching coordinates, and may reject repeated clicks for a short time.": {
+            "en": "Runs an admin-only city check against Open-Meteo, applies matching coordinates, and may reject repeated clicks for a short time.",
+            "de": "Fuehrt eine nur fuer Admin gedachte Stadtpruefung gegen Open-Meteo aus, uebernimmt passende Koordinaten und kann schnelle Wiederholungen kurzzeitig ablehnen."
         },
         "Latitude": {
             "en": "Latitude",
@@ -221,14 +221,14 @@
         "validateLocation": {
             "type": "sendTo",
             "label": "Check city and apply",
-            "help": "Queries Open-Meteo, shows whether the city was found and applies matching coordinates.",
+            "help": "Runs an admin-only city check against Open-Meteo, applies matching coordinates, and may reject repeated clicks for a short time.",
             "command": "resolveLocationConfig",
             "jsonData": "{\"city\":\"${data.city}\",\"countryCode\":\"${data.countryCode}\",\"timezoneMode\":\"${data.timezoneMode}\",\"timezone\":\"${data.timezone}\"}",
             "variant": "contained",
             "icon": "search",
             "useNative": true,
             "showProcess": true,
-            "timeout": 30000,
+            "timeout": 10000,
             "hidden": "data.locationMode !== 'geocode'",
             "disabled": "_alive === false",
             "newLine": true,

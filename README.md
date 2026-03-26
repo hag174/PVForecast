@@ -12,6 +12,7 @@ Solar forecast adapter for ioBroker using Open-Meteo.
 - Applies separate morning and afternoon damping factors to the PV energy
 - Publishes hourly forecast data for today and tomorrow
 - Publishes daily totals for today plus the next 6 days
+- Exposes widget-ready Material Design chart JSON for hourly and daily energy forecasts
 - Publishes current calendar week and current calendar month totals
 - Exposes completeness flags when week or month values are only partially covered by the API
 
@@ -33,6 +34,7 @@ The adapter uses a JSON Config based admin UI with these fields:
 
 In geocode mode the settings dialog can validate the configured city directly against Open-Meteo.
 Successful validation updates the effective coordinates and timezone preview in the form and enables saving while the current city selection stays unchanged.
+The validation endpoint accepts only admin-originated requests, uses a 10 second server-side timeout, and throttles repeated checks for one second.
 
 The adapter refreshes the forecast on startup and then hourly.
 Each Open-Meteo refresh uses a 30 second request timeout and skips overlapping scheduled runs while a previous refresh is still active.
@@ -61,6 +63,9 @@ Each Open-Meteo refresh uses a 30 second request timeout and skips overlapping s
 - `forecast.json.summary`
 
 The hourly `<key>` is derived from the local timestamp and gains a deterministic suffix when the same local hour occurs twice during the DST fallback change.
+All `*.energy_kwh` states use the ioBroker role `value.power.consumption`.
+`forecast.json.hourly` and `forecast.json.daily` now contain `axisLabels` plus `graphs` payloads for the vis-materialdesign JSON Chart widget.
+This replaces the previous raw-array JSON format and is a breaking change for scripts that consumed those states directly.
 
 ## Development
 
@@ -71,12 +76,14 @@ Important scripts:
 | `npm run build` | Compile the TypeScript sources |
 | `npm run check` | Run TypeScript type checking without emitting files |
 | `npm run lint` | Run ESLint |
-| `npm test` | Run project tests and package validation |
+| `npm test` | Run fast local tests and package validation |
 | `npm run coverage` | Run TypeScript coverage for `src/**/*.ts` with `c8` |
-| `npm run test:integration` | Run the generated ioBroker integration tests |
+| `npm run test:integration` | Run the generated ioBroker integration tests with test-only Open-Meteo mocking |
+| `npm run verify` | Run the full verification chain including the real adapter integration path |
 | `npm run dev-server` | Start the local ioBroker dev server |
 
 Project-specific unit tests live in `Tests/`. Template package and integration tests remain in `test/`.
+`npm run test:integration` now aborts early with a clear message when a host JS-Controller is already running.
 
 ## Notes
 
@@ -84,6 +91,12 @@ Project-specific unit tests live in `Tests/`. Template package and integration t
 - The adapter runtime itself is implemented in TypeScript under `src/`.
 
 ## Changelog
+
+### 0.6.0
+
+- breaking change: changed `forecast.json.hourly` and `forecast.json.daily` to vis-materialdesign JSON Chart payloads
+- kept `forecast.json.summary` and the existing single forecast states unchanged
+- added direct adapter tests for the new chart formatter and runtime wiring
 
 ### 0.5.0
 

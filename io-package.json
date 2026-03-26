@@ -1,8 +1,21 @@
 {
     "common": {
         "name": "solarforecast",
-        "version": "0.5.6",
+        "version": "0.6.0",
         "news": {
+            "0.6.0": {
+                "en": "Breaking change: forecast.json.hourly and forecast.json.daily now expose Material Design JSON Chart payloads instead of raw arrays.",
+                "de": "Breaking Change: forecast.json.hourly und forecast.json.daily liefern jetzt Material-Design-JSON-Chart-Payloads statt Roh-Arrays.",
+                "ru": "Breaking change: forecast.json.hourly and forecast.json.daily now expose Material Design JSON Chart payloads instead of raw arrays.",
+                "pt": "Breaking change: forecast.json.hourly and forecast.json.daily now expose Material Design JSON Chart payloads instead of raw arrays.",
+                "nl": "Breaking change: forecast.json.hourly and forecast.json.daily now expose Material Design JSON Chart payloads instead of raw arrays.",
+                "fr": "Breaking change: forecast.json.hourly and forecast.json.daily now expose Material Design JSON Chart payloads instead of raw arrays.",
+                "it": "Breaking change: forecast.json.hourly and forecast.json.daily now expose Material Design JSON Chart payloads instead of raw arrays.",
+                "es": "Breaking change: forecast.json.hourly and forecast.json.daily now expose Material Design JSON Chart payloads instead of raw arrays.",
+                "pl": "Breaking change: forecast.json.hourly and forecast.json.daily now expose Material Design JSON Chart payloads instead of raw arrays.",
+                "uk": "Breaking change: forecast.json.hourly and forecast.json.daily now expose Material Design JSON Chart payloads instead of raw arrays.",
+                "zh-cn": "Breaking change: forecast.json.hourly and forecast.json.daily now expose Material Design JSON Chart payloads instead of raw arrays."
+            },
             "0.5.6": {
                 "en": "Maintenance release with version bump.",
                 "de": "Wartungsrelease mit Versionsanhebung.",

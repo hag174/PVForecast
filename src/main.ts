@@ -4,11 +4,11 @@
 
 import * as utils from '@iobroker/adapter-core';
 import { AdapterRuntime } from './lib/adapter-runtime';
-import { LocationResolver, RESOLVE_LOCATION_CONFIG_COMMAND } from './lib/location-resolver';
+import { AdminLocationMessageHandler } from './lib/admin-location-message-handler';
 
 class Solarforecast extends utils.Adapter {
     private readonly runtime = new AdapterRuntime(this);
-    private readonly locationResolver = new LocationResolver();
+    private readonly adminLocationMessageHandler = new AdminLocationMessageHandler(this);
 
     public constructor(options: Partial<utils.AdapterOptions> = {}) {
         super({
@@ -22,12 +22,7 @@ class Solarforecast extends utils.Adapter {
     }
 
     private async onMessage(obj: ioBroker.Message): Promise<void> {
-        if (!obj || obj.command !== RESOLVE_LOCATION_CONFIG_COMMAND || !obj.callback) {
-            return;
-        }
-
-        const response = await this.locationResolver.validateGeocodeLocation(obj.message);
-        this.sendTo(obj.from, obj.command, response, obj.callback);
+        await this.adminLocationMessageHandler.handleMessage(obj);
     }
 }
 

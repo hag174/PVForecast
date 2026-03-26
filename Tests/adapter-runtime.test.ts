@@ -7,6 +7,7 @@ import {
     REQUEST_TIMEOUT_MS,
     type AdapterRuntimeHost,
 } from '../src/lib/adapter-runtime';
+import { formatDailyMaterialDesignChart, formatHourlyMaterialDesignChart } from '../src/lib/material-design-chart';
 import type { ForecastRow, ForecastSnapshot } from '../src/lib/types';
 
 function createAdapterConfig(): ioBroker.AdapterConfig {
@@ -184,8 +185,21 @@ describe('AdapterRuntime', () => {
         expect(host.getState('info.lastError')?.val).to.equal('');
         expect(host.getState('info.lastUpdate')?.val).to.equal('2026-03-21T08:15:00.000Z');
         expect(host.getObject('info.lastUpdate')?.common.role).to.equal('value.datetime');
+        expect(host.getObject('summary.today.energy_kwh')?.common.role).to.equal('value.power.consumption');
+        expect(host.getObject('summary.today.remaining_energy_kwh')?.common.role).to.equal('value.power.consumption');
+        expect(host.getObject('summary.currentWeek.energy_kwh')?.common.role).to.equal('value.power.consumption');
+        expect(host.getObject('summary.currentMonth.energy_kwh')?.common.role).to.equal('value.power.consumption');
+        expect(host.getObject('forecast.daily.day0.energy_kwh')?.common.role).to.equal('value.power.consumption');
+        expect(host.getObject('forecast.hourly.timestamps.2026_03_21T10_00.energy_kwh')?.common.role).to.equal(
+            'value.power.consumption',
+        );
         expect(host.getState('summary.today.remaining_energy_kwh')?.val).to.equal(snapshot.todayRemainingEnergyKwh);
-        expect(host.getState('forecast.json.hourly')?.val).to.equal(JSON.stringify(snapshot.hourly));
+        expect(host.getState('forecast.json.hourly')?.val).to.equal(
+            JSON.stringify(formatHourlyMaterialDesignChart(snapshot.hourly)),
+        );
+        expect(host.getState('forecast.json.daily')?.val).to.equal(
+            JSON.stringify(formatDailyMaterialDesignChart(snapshot.daily)),
+        );
         expect(host.getState('forecast.json.summary')?.val).to.equal(
             JSON.stringify({
                 todayEnergyKwh: snapshot.todayEnergyKwh,
@@ -212,10 +226,12 @@ describe('AdapterRuntime', () => {
 
         await runtime.onReady();
         const previousHourlyJson = host.getState('forecast.json.hourly')?.val;
+        const previousDailyJson = host.getState('forecast.json.daily')?.val;
 
         await runtime.refreshForecast();
 
         expect(host.getState('forecast.json.hourly')?.val).to.equal(previousHourlyJson);
+        expect(host.getState('forecast.json.daily')?.val).to.equal(previousDailyJson);
         expect(host.getState('info.connection')?.val).to.equal(false);
         expect(host.getState('info.lastError')?.val).to.equal('boom');
         expect(host.log.error.calledOnce).to.equal(true);

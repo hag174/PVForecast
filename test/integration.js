@@ -1,13 +1,11 @@
-const fs = require('node:fs');
-const os = require('node:os');
 const path = require('node:path');
 const { expect } = require('chai');
 const { tests } = require('@iobroker/testing');
 
 const TIME_ZONE = 'Europe/Berlin';
-const FIXTURE_ENV = 'SOLARFORECAST_TEST_FIXTURES';
+const FIXTURE_ENV = 'SOLARFORECAST_OPEN_METEO_FIXTURE';
 const ADAPTER_NAMESPACE = 'solarforecast.0';
-const FIXTURE_DIR = fs.mkdtempSync(path.join(os.tmpdir(), 'solarforecast-integration-'));
+const PRELOAD_MODULE_PATH = path.join(__dirname, 'mock-open-meteo.js');
 
 function formatLocalDate(date, timeZone = TIME_ZONE) {
     const parts = new Intl.DateTimeFormat('en-CA', {
@@ -47,77 +45,18 @@ function sanitizeStateKey(timestamp) {
     return timestamp.replace(/[^a-zA-Z0-9]/g, '_');
 }
 
-function createSuccessFixture() {
-    const today = formatLocalDate(new Date());
-    const startDate = addDays(today, -1);
-    const endDate = addDays(today, 3);
-    const times = [];
-    const irradiance = [];
-    const cloudCover = [];
-
-    let currentDate = startDate;
-    while (currentDate <= endDate) {
-        for (let hour = 0; hour < 24; hour++) {
-            times.push(`${currentDate}T${hour.toString().padStart(2, '0')}:00`);
-            irradiance.push(100);
-            cloudCover.push(20);
-        }
-        currentDate = addDays(currentDate, 1);
-    }
-
-    return {
-        geocode: {
-            results: [
-                {
-                    name: 'Berlin',
-                    country: 'Germany',
-                    country_code: 'DE',
-                    latitude: 52.52,
-                    longitude: 13.405,
-                    timezone: TIME_ZONE,
-                },
-            ],
-        },
-        forecast: {
-            timezone: TIME_ZONE,
-            hourly: {
-                time: times,
-                global_tilted_irradiance: irradiance,
-                cloud_cover: cloudCover,
-            },
-        },
-    };
+function formatChartDateLabel(dateString) {
+    return `${dateString.slice(8, 10)}.${dateString.slice(5, 7)}.`;
 }
 
-function createFailureFixture() {
-    return {
-        geocode: {
-            results: [
-                {
-                    name: 'Berlin',
-                    country: 'Germany',
-                    country_code: 'DE',
-                    latitude: 52.52,
-                    longitude: 13.405,
-                    timezone: TIME_ZONE,
-                },
-            ],
-        },
-        forecast: {
-            timezone: TIME_ZONE,
-            hourly: {
-                time: ['2026-03-21T00:00'],
-                global_tilted_irradiance: [],
-                cloud_cover: [],
-            },
-        },
-    };
-}
+function createAdapterEnvironment(fixtureName) {
+    const existingNodeOptions = process.env.NODE_OPTIONS?.trim();
+    const preloadNodeOption = `--require=${PRELOAD_MODULE_PATH}`;
 
-function writeFixtureFile(name, content) {
-    const filePath = path.join(FIXTURE_DIR, name);
-    fs.writeFileSync(filePath, JSON.stringify(content), 'utf8');
-    return filePath;
+    return {
+        NODE_OPTIONS: existingNodeOptions ? `${existingNodeOptions} ${preloadNodeOption}` : preloadNodeOption,
+        [FIXTURE_ENV]: fixtureName,
+    };
 }
 
 async function waitForState(harness, id, predicate, timeoutMs = 10000) {
@@ -189,11 +128,9 @@ tests.integration(path.join(__dirname, '..'), {
     defineAdditionalTests({ suite }) {
         suite('Publishes forecast states', (getHarness) => {
             let harness;
-            let fixturePath;
 
             before(() => {
                 harness = getHarness();
-                fixturePath = writeFixtureFile('success-fixture.json', createSuccessFixture());
             });
 
             it('writes forecast states and removes stale hourly channels', async function () {
@@ -202,9 +139,7 @@ tests.integration(path.join(__dirname, '..'), {
                 await configureAdapter(harness);
                 await seedStaleHourlyChannel(harness);
                 const now = new Date();
-                await harness.startAdapterAndWait(true, {
-                    [FIXTURE_ENV]: fixturePath,
-                });
+                await harness.startAdapterAndWait(true, createAdapterEnvironment('success'));
 
                 const today = formatLocalDate(now);
                 const tomorrow = addDays(today, 1);
@@ -228,6 +163,9 @@ tests.integration(path.join(__dirname, '..'), {
                 const dailyJsonState = await harness.states.getStateAsync(`${ADAPTER_NAMESPACE}.forecast.json.daily`);
                 const summaryJsonState = await harness.states.getStateAsync(`${ADAPTER_NAMESPACE}.forecast.json.summary`);
                 const lastUpdateObject = await harness.objects.getObjectAsync(`${ADAPTER_NAMESPACE}.info.lastUpdate`);
+                const todayEnergyObject = await harness.objects.getObjectAsync(
+                    `${ADAPTER_NAMESPACE}.summary.today.energy_kwh`,
+                );
                 const staleChannel = await harness.objects.getObjectAsync(
                     `${ADAPTER_NAMESPACE}.forecast.hourly.timestamps.stale_fixture`,
                 );
@@ -242,19 +180,36 @@ tests.integration(path.join(__dirname, '..'), {
                 expect(day1DateState?.val).to.equal(tomorrow);
                 expect(hourlyTimestampState?.val).to.equal(`${today}T00:00`);
                 expect(lastUpdateObject?.common.role).to.equal('value.datetime');
+                expect(todayEnergyObject?.common.role).to.equal('value.power.consumption');
 
                 const hourlyJson = JSON.parse(hourlyJsonState.val);
                 const dailyJson = JSON.parse(dailyJsonState.val);
                 const summaryJson = JSON.parse(summaryJsonState.val);
-                expect(hourlyJson).to.have.lengthOf(48);
-                expect(dailyJson[0]).to.deep.equal({
-                    date: today,
-                    energyKwh: 5.28,
+                expect(hourlyJson.axisLabels).to.have.lengthOf(48);
+                expect(hourlyJson.axisLabels[0]).to.equal(`${formatChartDateLabel(today)}\n00:00`);
+                expect(hourlyJson.graphs).to.have.lengthOf(1);
+                expect(hourlyJson.graphs[0]).to.include({
+                    type: 'bar',
+                    color: '#f9a825',
+                    legendText: 'Energy forecast',
+                    yAxis_appendix: ' kWh',
+                    tooltip_AppendText: ' kWh',
+                    yAxis_min: 0,
+                    datalabel_show: false,
                 });
-                expect(dailyJson[1]).to.deep.equal({
-                    date: tomorrow,
-                    energyKwh: 5.28,
-                });
+                expect(hourlyJson.graphs[0].data).to.have.lengthOf(48);
+                expect(hourlyJson.graphs[0].data[0]).to.equal(0.22);
+                expect(dailyJson.axisLabels).to.deep.equal([
+                    formatChartDateLabel(today),
+                    formatChartDateLabel(tomorrow),
+                    formatChartDateLabel(addDays(today, 2)),
+                    formatChartDateLabel(addDays(today, 3)),
+                    formatChartDateLabel(addDays(today, 4)),
+                    formatChartDateLabel(addDays(today, 5)),
+                    formatChartDateLabel(addDays(today, 6)),
+                ]);
+                expect(dailyJson.graphs).to.have.lengthOf(1);
+                expect(dailyJson.graphs[0].data).to.deep.equal([5.28, 5.28, 5.28, 0, 0, 0, 0]);
                 expect(summaryJson.todayEnergyKwh).to.equal(5.28);
                 expect(summaryJson.todayRemainingEnergyKwh).to.equal(remainingTodayEnergy);
                 expect(staleChannel).to.equal(null);
@@ -263,20 +218,16 @@ tests.integration(path.join(__dirname, '..'), {
 
         suite('Reports refresh failures', (getHarness) => {
             let harness;
-            let fixturePath;
 
             before(() => {
                 harness = getHarness();
-                fixturePath = writeFixtureFile('failure-fixture.json', createFailureFixture());
             });
 
             it('sets info.lastError when the forecast payload is invalid', async function () {
                 this.timeout(30000);
 
                 await configureAdapter(harness);
-                await harness.startAdapterAndWait(false, {
-                    [FIXTURE_ENV]: fixturePath,
-                });
+                await harness.startAdapterAndWait(false, createAdapterEnvironment('failure'));
 
                 const lastErrorState = await waitForState(
                     harness,
