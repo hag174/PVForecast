@@ -27,6 +27,7 @@ __export(config_exports, {
 module.exports = __toCommonJS(config_exports);
 const DEFAULT_CITY = "Berlin";
 const DEFAULT_TIME_ZONE = "Europe/Berlin";
+const DEFAULT_REFRESH_INTERVAL_MINUTES = 60;
 const DEFAULT_TILT_DEG = 0;
 const DEFAULT_AZIMUTH_DEG = 0;
 const DEFAULT_MORNING_DAMPING_PCT = 100;
@@ -128,8 +129,16 @@ function resolveEffectiveConfig(config) {
     }
   }
   const configuredTimeZone = normalizeOptionalText(config.timezone) || DEFAULT_TIME_ZONE;
+  const refreshIntervalMinutes = toFiniteNumber(
+    config.refreshIntervalMinutes,
+    "refreshIntervalMinutes",
+    DEFAULT_REFRESH_INTERVAL_MINUTES
+  );
   if (timezoneMode === "manual" && !isValidTimeZone(configuredTimeZone)) {
     throw new Error(`The configured timezone "${configuredTimeZone}" is not valid.`);
+  }
+  if (!Number.isInteger(refreshIntervalMinutes) || refreshIntervalMinutes < 1) {
+    throw new Error("refreshIntervalMinutes must be a whole number greater than or equal to 1.");
   }
   return {
     locationMode,
@@ -139,6 +148,7 @@ function resolveEffectiveConfig(config) {
     longitude,
     timezoneMode,
     timeZone: timezoneMode === "manual" ? configuredTimeZone : "auto",
+    refreshIntervalMinutes,
     tiltDeg,
     azimuthDeg,
     peakPowerKwp,

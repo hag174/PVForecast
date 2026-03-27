@@ -19,6 +19,7 @@ function createAdapterConfig(): ioBroker.AdapterConfig {
         longitude: 13.405,
         timezoneMode: 'auto',
         timezone: 'Europe/Berlin',
+        refreshIntervalMinutes: 60,
         tiltDeg: 35,
         azimuthDeg: -15,
         peakPowerKwp: 2.2,
@@ -175,7 +176,7 @@ describe('AdapterRuntime', () => {
         clock = undefined;
     });
 
-    it('initializes static objects, writes snapshot states and schedules hourly refreshes', async () => {
+    it('initializes static objects, writes snapshot states and schedules refreshes with the default interval', async () => {
         const host = new TestHost();
         host.seedObject('forecast.json.hourly');
         const snapshot = createSnapshot();
@@ -229,6 +230,23 @@ describe('AdapterRuntime', () => {
         );
         expect(host.intervals).to.have.lengthOf(1);
         expect(host.intervals[0].ms).to.equal(HOURLY_REFRESH_INTERVAL_MS);
+    });
+
+    it('uses the configured refresh interval in minutes for the scheduler', async () => {
+        const host = new TestHost({
+            ...createAdapterConfig(),
+            refreshIntervalMinutes: 15,
+        } as ioBroker.AdapterConfig);
+        const fetchSnapshot = sinon.stub().resolves(createSnapshot());
+        const runtime = new AdapterRuntime(host, {
+            forecastService: { fetchSnapshot },
+            now: () => new Date('2026-03-21T08:15:00.000Z'),
+        });
+
+        await runtime.onReady();
+
+        expect(host.intervals).to.have.lengthOf(1);
+        expect(host.intervals[0].ms).to.equal(15 * 60 * 1000);
     });
 
     it('keeps the previous forecast values when a refresh fails', async () => {

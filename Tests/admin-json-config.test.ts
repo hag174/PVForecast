@@ -10,15 +10,23 @@ import {
 } from '../src/lib/location-resolver';
 
 type JsonConfigItem = {
+    type?: string;
+    disabled?: boolean | string;
+    min?: number;
+    step?: number;
     onChange?: {
         calculateFunc?: string;
     };
 };
 
-function loadLocationValidationCalculateFunc(): (data: Record<string, unknown>, alive: boolean) => string {
-    const jsonConfig = JSON.parse(readFileSync(join(process.cwd(), 'admin', 'jsonConfig.json'), 'utf8')) as {
+function loadJsonConfig(): { items?: Record<string, JsonConfigItem> } {
+    return JSON.parse(readFileSync(join(process.cwd(), 'admin', 'jsonConfig.json'), 'utf8')) as {
         items?: Record<string, JsonConfigItem>;
     };
+}
+
+function loadLocationValidationCalculateFunc(): (data: Record<string, unknown>, alive: boolean) => string {
+    const jsonConfig = loadJsonConfig();
     const calculateFunc = jsonConfig.items?._locationValidationDisplay?.onChange?.calculateFunc;
 
     if (!calculateFunc) {
@@ -114,5 +122,22 @@ describe('admin jsonConfig city validation display', () => {
         );
 
         expect(displayText).to.equal('Not checked yet.');
+    });
+
+    it('keeps the city validation status as a disabled display field', () => {
+        const jsonConfig = loadJsonConfig();
+        const statusField = jsonConfig.items?._locationValidationDisplay;
+
+        expect(statusField?.type).to.equal('text');
+        expect(statusField?.disabled).to.equal(true);
+    });
+
+    it('defines the refresh interval as a positive integer minute field', () => {
+        const jsonConfig = loadJsonConfig();
+        const refreshField = jsonConfig.items?.refreshIntervalMinutes;
+
+        expect(refreshField?.type).to.equal('number');
+        expect(refreshField?.min).to.equal(1);
+        expect(refreshField?.step).to.equal(1);
     });
 });

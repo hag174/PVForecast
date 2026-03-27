@@ -11,6 +11,7 @@ declare global {
             longitude: number;
             timezoneMode: 'auto' | 'manual';
             timezone: string;
+            refreshIntervalMinutes: number;
             tiltDeg: number;
             azimuthDeg: number;
             peakPowerKwp: number;

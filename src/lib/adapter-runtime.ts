@@ -9,6 +9,7 @@ import type { DailyForecast, ForecastRow, ForecastSnapshot } from './types';
 type TimeoutHandle = ReturnType<typeof setTimeout>;
 type RefreshTrigger = 'startup' | 'timer' | 'manual';
 
+const MINUTE_IN_MS = 60 * 1000;
 export const HOURLY_REFRESH_INTERVAL_MS = 60 * 60 * 1000;
 export const REQUEST_TIMEOUT_MS = 30_000;
 
@@ -68,7 +69,7 @@ export class AdapterRuntime {
 
         this.refreshTimer = this.adapter.setInterval(() => {
             void this.refreshForecast('timer');
-        }, HOURLY_REFRESH_INTERVAL_MS);
+        }, this.getRefreshIntervalMs());
     }
 
     public onUnload(callback: () => void): void {
@@ -176,6 +177,10 @@ export class AdapterRuntime {
         }
 
         return this.toErrorMessage(error);
+    }
+
+    private getRefreshIntervalMs(): number {
+        return resolveEffectiveConfig(this.adapter.config).refreshIntervalMinutes * MINUTE_IN_MS;
     }
 
     private toErrorMessage(error: unknown): string {

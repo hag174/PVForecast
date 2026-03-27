@@ -26,6 +26,7 @@ The adapter uses a JSON Config based admin UI with these fields:
 - `latitude` and `longitude`: auto-filled after a successful city check and editable in manual mode
 - `timezoneMode`: `auto` or `manual`
 - `timezone`: manual override, default `Europe/Berlin`
+- `refreshIntervalMinutes`: forecast refresh interval after startup, default `60`
 - `tiltDeg`: panel tilt in degrees, default `0`
 - `azimuthDeg`: panel azimuth in degrees, default `0`
 - `peakPowerKwp`: installed PV peak power in `kWp`, default `2.2`
@@ -36,7 +37,8 @@ In geocode mode the settings dialog can validate the configured city directly ag
 Successful validation updates the effective coordinates and timezone preview in the form and enables saving while the current city selection stays unchanged.
 The validation endpoint accepts only admin-originated requests, uses a 10 second server-side timeout, and throttles repeated checks for one second.
 
-The adapter refreshes the forecast on startup and then hourly.
+The adapter refreshes the forecast on startup and then at the configured minute interval.
+The default interval is 60 minutes.
 Each Open-Meteo refresh uses a 30 second request timeout and skips overlapping scheduled runs while a previous refresh is still active.
 
 ## Exposed states

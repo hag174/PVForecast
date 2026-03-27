@@ -24,6 +24,7 @@ describe('Governance consistency', () => {
         const readme = readRepoFile('README.md');
 
         for (const content of [agents, readme]) {
+            expect(content).to.include('refreshIntervalMinutes');
             expect(content).to.include('peakPowerKwp');
             expect(content).to.include('morningDampingPct');
             expect(content).to.include('afternoonDampingPct');

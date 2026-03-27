@@ -100,6 +100,14 @@
             "en": "Editable only in manual timezone mode. In automatic mode the verified city determines the timezone.",
             "de": "Nur im manuellen Zeitzonenmodus editierbar. Im Automatikmodus bestimmt die geprüfte Stadt die Zeitzone."
         },
+        "Refresh interval in minutes": {
+            "en": "Refresh interval in minutes",
+            "de": "Aktualisierungsintervall in Minuten"
+        },
+        "How often the adapter refreshes the forecast after startup. The first refresh still runs immediately.": {
+            "en": "How often the adapter refreshes the forecast after startup. The first refresh still runs immediately.",
+            "de": "Wie oft der Adapter die Prognose nach dem Start aktualisiert. Die erste Aktualisierung erfolgt weiterhin sofort."
+        },
         "Tilt in degrees": {
             "en": "Tilt in degrees",
             "de": "Neigung in Grad"
@@ -197,7 +205,7 @@
             "type": "text",
             "label": "City check status",
             "help": "Shows whether the current city and country were validated and which values will be used.",
-            "readOnly": true,
+            "disabled": true,
             "hidden": "data.locationMode !== 'geocode'",
             "newLine": true,
             "xs": 12,
@@ -290,6 +298,19 @@
             "label": "Timezone",
             "help": "Editable only in manual timezone mode. In automatic mode the verified city determines the timezone.",
             "disabled": "data.timezoneMode !== 'manual'",
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 4
+        },
+        "refreshIntervalMinutes": {
+            "type": "number",
+            "label": "Refresh interval in minutes",
+            "help": "How often the adapter refreshes the forecast after startup. The first refresh still runs immediately.",
+            "min": 1,
+            "step": 1,
             "newLine": true,
             "xs": 12,
             "sm": 12,
