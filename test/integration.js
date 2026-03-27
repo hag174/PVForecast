@@ -219,6 +219,8 @@ tests.integration(path.join(__dirname, '..'), {
                 expect(hourlyTomorrowJson.graphs[0].data).to.have.lengthOf(24);
                 expect(hourlyTodayJson.graphs[0].data[0]).to.equal(0.22);
                 expect(hourlyTomorrowJson.graphs[0].data[0]).to.equal(0.22);
+                // The success fixture provides forecast rows through today + 3.
+                const expectedDailyEnergyData = [5.28, 5.28, 5.28, 5.28, 0, 0, 0];
                 expect(dailyJson.axisLabels).to.deep.equal([
                     formatChartDateLabel(today),
                     formatChartDateLabel(tomorrow),
@@ -229,7 +231,7 @@ tests.integration(path.join(__dirname, '..'), {
                     formatChartDateLabel(addDays(today, 6)),
                 ]);
                 expect(dailyJson.graphs).to.have.lengthOf(1);
-                expect(dailyJson.graphs[0].data).to.deep.equal([5.28, 5.28, 5.28, 0, 0, 0, 0]);
+                expect(dailyJson.graphs[0].data).to.deep.equal(expectedDailyEnergyData);
                 expect(summaryJson.todayEnergyKwh).to.equal(5.28);
                 expect(summaryJson.todayRemainingEnergyKwh).to.equal(remainingTodayEnergy);
                 expect(staleChannel).to.equal(null);

@@ -1,8 +1,21 @@
 {
     "common": {
         "name": "solarforecast",
-        "version": "0.6.1",
+        "version": "0.6.2",
         "news": {
+            "0.6.2": {
+                "en": "Fixed the integration test expectation for the 7-day daily forecast JSON and bumped the adapter version.",
+                "de": "Erwartungswert im Integrationstest fuer das 7-Tage-Daily-Forecast-JSON korrigiert und die Adapter-Version angehoben.",
+                "ru": "Fixed the integration test expectation for the 7-day daily forecast JSON and bumped the adapter version.",
+                "pt": "Fixed the integration test expectation for the 7-day daily forecast JSON and bumped the adapter version.",
+                "nl": "Fixed the integration test expectation for the 7-day daily forecast JSON and bumped the adapter version.",
+                "fr": "Fixed the integration test expectation for the 7-day daily forecast JSON and bumped the adapter version.",
+                "it": "Fixed the integration test expectation for the 7-day daily forecast JSON and bumped the adapter version.",
+                "es": "Fixed the integration test expectation for the 7-day daily forecast JSON and bumped the adapter version.",
+                "pl": "Fixed the integration test expectation for the 7-day daily forecast JSON and bumped the adapter version.",
+                "uk": "Fixed the integration test expectation for the 7-day daily forecast JSON and bumped the adapter version.",
+                "zh-cn": "Fixed the integration test expectation for the 7-day daily forecast JSON and bumped the adapter version."
+            },
             "0.6.0": {
                 "en": "Breaking change: split forecast.json.hourly into forecast.json.hourlyToday and forecast.json.hourlyTomorrow and switched the hourly/daily JSON mirrors to Material Design chart payloads.",
                 "de": "Breaking Change: forecast.json.hourly wurde in forecast.json.hourlyToday und forecast.json.hourlyTomorrow aufgeteilt und die stündlichen/täglichen JSON-Mirrors auf Material-Design-Chart-Payloads umgestellt.",
