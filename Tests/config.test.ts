@@ -12,6 +12,7 @@ describe('resolveEffectiveConfig', () => {
             longitude: undefined as unknown as number,
             timezoneMode: 'auto',
             timezone: '',
+            refreshIntervalMinutes: undefined as unknown as number,
             tiltDeg: undefined as unknown as number,
             azimuthDeg: undefined as unknown as number,
             peakPowerKwp: 2.2,
@@ -26,6 +27,7 @@ describe('resolveEffectiveConfig', () => {
         expect(config.longitude).to.equal(null);
         expect(config.timezoneMode).to.equal('auto');
         expect(config.timeZone).to.equal('auto');
+        expect(config.refreshIntervalMinutes).to.equal(60);
         expect(config.tiltDeg).to.equal(0);
         expect(config.azimuthDeg).to.equal(0);
         expect(config.peakPowerKwp).to.equal(2.2);
@@ -42,6 +44,7 @@ describe('resolveEffectiveConfig', () => {
             longitude: 11.8,
             timezoneMode: 'manual',
             timezone: 'Europe/Berlin',
+            refreshIntervalMinutes: 15,
             tiltDeg: 35,
             azimuthDeg: -15,
             peakPowerKwp: 9.8,
@@ -54,6 +57,7 @@ describe('resolveEffectiveConfig', () => {
         expect(config.latitude).to.equal(50.5);
         expect(config.longitude).to.equal(11.8);
         expect(config.timeZone).to.equal('Europe/Berlin');
+        expect(config.refreshIntervalMinutes).to.equal(15);
         expect(config.tiltDeg).to.equal(35);
         expect(config.azimuthDeg).to.equal(-15);
         expect(config.peakPowerKwp).to.equal(9.8);
@@ -71,6 +75,7 @@ describe('resolveEffectiveConfig', () => {
                 longitude: 0,
                 timezoneMode: 'auto',
                 timezone: '',
+                refreshIntervalMinutes: 60,
                 tiltDeg: 0,
                 azimuthDeg: 0,
                 peakPowerKwp: undefined as unknown as number,
@@ -90,6 +95,7 @@ describe('resolveEffectiveConfig', () => {
                 longitude: 11.8,
                 timezoneMode: 'auto',
                 timezone: '',
+                refreshIntervalMinutes: 60,
                 tiltDeg: 0,
                 azimuthDeg: 0,
                 peakPowerKwp: 2.2,
@@ -107,6 +113,7 @@ describe('resolveEffectiveConfig', () => {
                 longitude: 0,
                 timezoneMode: 'manual',
                 timezone: 'Mars/Base',
+                refreshIntervalMinutes: 60,
                 tiltDeg: 0,
                 azimuthDeg: 0,
                 peakPowerKwp: 2.2,
@@ -124,6 +131,7 @@ describe('resolveEffectiveConfig', () => {
                 longitude: 0,
                 timezoneMode: 'auto',
                 timezone: '',
+                refreshIntervalMinutes: 60,
                 tiltDeg: 0,
                 azimuthDeg: 0,
                 peakPowerKwp: 0,
@@ -141,6 +149,7 @@ describe('resolveEffectiveConfig', () => {
                 longitude: 0,
                 timezoneMode: 'auto',
                 timezone: '',
+                refreshIntervalMinutes: 60,
                 tiltDeg: 0,
                 azimuthDeg: 0,
                 peakPowerKwp: 2.2,
@@ -158,6 +167,7 @@ describe('resolveEffectiveConfig', () => {
                 longitude: 0,
                 timezoneMode: 'auto',
                 timezone: '',
+                refreshIntervalMinutes: 60,
                 tiltDeg: 0,
                 azimuthDeg: 0,
                 peakPowerKwp: 2.2,
@@ -165,5 +175,41 @@ describe('resolveEffectiveConfig', () => {
                 afternoonDampingPct: -1,
             } as ioBroker.AdapterConfig),
         ).to.throw('afternoonDampingPct');
+
+        expect(() =>
+            resolveEffectiveConfig({
+                locationMode: 'geocode',
+                city: 'Berlin',
+                countryCode: '',
+                latitude: 0,
+                longitude: 0,
+                timezoneMode: 'auto',
+                timezone: '',
+                refreshIntervalMinutes: 0,
+                tiltDeg: 0,
+                azimuthDeg: 0,
+                peakPowerKwp: 2.2,
+                morningDampingPct: 100,
+                afternoonDampingPct: 100,
+            } as ioBroker.AdapterConfig),
+        ).to.throw('refreshIntervalMinutes');
+
+        expect(() =>
+            resolveEffectiveConfig({
+                locationMode: 'geocode',
+                city: 'Berlin',
+                countryCode: '',
+                latitude: 0,
+                longitude: 0,
+                timezoneMode: 'auto',
+                timezone: '',
+                refreshIntervalMinutes: 1.5,
+                tiltDeg: 0,
+                azimuthDeg: 0,
+                peakPowerKwp: 2.2,
+                morningDampingPct: 100,
+                afternoonDampingPct: 100,
+            } as ioBroker.AdapterConfig),
+        ).to.throw('refreshIntervalMinutes');
     });
 });

@@ -1,8 +1,21 @@
 {
     "common": {
         "name": "solarforecast",
-        "version": "0.6.2",
+        "version": "0.7.0",
         "news": {
+            "0.7.0": {
+                "en": "Added a configurable refresh interval in minutes and changed the city validation status to a display-only field.",
+                "de": "Konfigurierbares Aktualisierungsintervall in Minuten hinzugefuegt und den Status der Stadtpruefung in ein reines Anzeigefeld umgewandelt.",
+                "ru": "Added a configurable refresh interval in minutes and changed the city validation status to a display-only field.",
+                "pt": "Added a configurable refresh interval in minutes and changed the city validation status to a display-only field.",
+                "nl": "Added a configurable refresh interval in minutes and changed the city validation status to a display-only field.",
+                "fr": "Added a configurable refresh interval in minutes and changed the city validation status to a display-only field.",
+                "it": "Added a configurable refresh interval in minutes and changed the city validation status to a display-only field.",
+                "es": "Added a configurable refresh interval in minutes and changed the city validation status to a display-only field.",
+                "pl": "Added a configurable refresh interval in minutes and changed the city validation status to a display-only field.",
+                "uk": "Added a configurable refresh interval in minutes and changed the city validation status to a display-only field.",
+                "zh-cn": "Added a configurable refresh interval in minutes and changed the city validation status to a display-only field."
+            },
             "0.6.2": {
                 "en": "Fixed the integration test expectation for the 7-day daily forecast JSON and bumped the adapter version.",
                 "de": "Erwartungswert im Integrationstest fuer das 7-Tage-Daily-Forecast-JSON korrigiert und die Adapter-Version angehoben.",
@@ -149,6 +162,7 @@
         "longitude": 13.405,
         "timezoneMode": "auto",
         "timezone": "Europe/Berlin",
+        "refreshIntervalMinutes": 60,
         "tiltDeg": 0,
         "azimuthDeg": 0,
         "peakPowerKwp": 2.2,

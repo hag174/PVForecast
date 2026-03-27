@@ -24,6 +24,7 @@ This project implements a TypeScript ioBroker adapter for PV forecast data based
 - `latitude` and `longitude`: required in manual mode
 - `timezoneMode`: `auto` or `manual`
 - `timezone`: default `Europe/Berlin`
+- `refreshIntervalMinutes`: default `60`
 - `tiltDeg`: default `0`
 - `azimuthDeg`: default `0`
 - `peakPowerKwp`: default `2.2`

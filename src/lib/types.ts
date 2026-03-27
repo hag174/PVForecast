@@ -11,6 +11,7 @@ export interface EffectiveConfig {
     longitude: number | null;
     timezoneMode: TimezoneMode;
     timeZone: string;
+    refreshIntervalMinutes: number;
     tiltDeg: number;
     azimuthDeg: number;
     peakPowerKwp: number;

@@ -39,6 +39,7 @@ describe('ForecastService', () => {
         longitude: null,
         timezoneMode: 'auto',
         timeZone: 'auto',
+        refreshIntervalMinutes: 60,
         tiltDeg: 0,
         azimuthDeg: 0,
         peakPowerKwp: 2.2,

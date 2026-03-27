@@ -27,6 +27,7 @@ var import_config = require("./config");
 var import_dates = require("./dates");
 var import_forecast_service = require("./forecast-service");
 var import_material_design_chart = require("./material-design-chart");
+const MINUTE_IN_MS = 60 * 1e3;
 const HOURLY_REFRESH_INTERVAL_MS = 60 * 60 * 1e3;
 const REQUEST_TIMEOUT_MS = 3e4;
 class AdapterRuntime {
@@ -57,7 +58,7 @@ class AdapterRuntime {
     await this.refreshForecast("startup");
     this.refreshTimer = this.adapter.setInterval(() => {
       void this.refreshForecast("timer");
-    }, HOURLY_REFRESH_INTERVAL_MS);
+    }, this.getRefreshIntervalMs());
   }
   onUnload(callback) {
     try {
@@ -149,6 +150,9 @@ class AdapterRuntime {
       return this.toErrorMessage(signal.reason);
     }
     return this.toErrorMessage(error);
+  }
+  getRefreshIntervalMs() {
+    return (0, import_config.resolveEffectiveConfig)(this.adapter.config).refreshIntervalMinutes * MINUTE_IN_MS;
   }
   toErrorMessage(error) {
     return error instanceof Error ? error.message : String(error);
